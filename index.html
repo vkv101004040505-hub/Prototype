@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мозговой фитнес · Татарский код</title>
+  <style>
+    /* Базовые сбросы и шрифты */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f7f3ee;
+      color: #2d2a24;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+    .app {
+      max-width: 800px;
+      width: 100%;
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      padding: 24px 28px 40px;
+      position: relative;
+    }
+
+    /* Шапка */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #efe6de;
+      padding-bottom: 16px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 20px;
+      color: #9c6b4b;
+    }
+    .logo span {
+      background: #9c6b4b;
+      color: white;
+      border-radius: 40px;
+      padding: 4px 14px;
+      font-size: 14px;
+    }
+    .nav {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .nav button {
+      background: none;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 15px;
+      color: #5b4d41;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .nav button.active {
+      background: #9c6b4b;
+      color: white;
+      box-shadow: 0 4px 8px rgba(156,107,75,0.2);
+    }
+    .nav button:hover:not(.active) {
+      background: #efe6de;
+    }
+
+    /* Контентные секции */
+    .section {
+      display: none;
+      animation: fade 0.3s ease;
+    }
+    .section.active {
+      display: block;
+    }
+    @keyframes fade {
+      0% { opacity: 0.2; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #3d332b;
+    }
+    .subtitle {
+      color: #7f6e5e;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+    .card {
+      background: #faf8f6;
+      border-radius: 20px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      border: 1px solid #ede7e1;
+    }
+
+    /* Задания */
+    .task {
+      margin-bottom: 24px;
+    }
+    .task-question {
+      font-weight: 500;
+      font-size: 17px;
+      margin-bottom: 12px;
+    }
+    .task-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 8px 0 12px;
+    }
+    .task-options button {
+      background: white;
+      border: 2px solid #ddd6ce;
+      padding: 10px 20px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.15s;
+      font-weight: 500;
+    }
+    .task-options button:hover {
+      border-color: #9c6b4b;
+      background: #f3ede8;
+    }
+    .task-options button.correct {
+      border-color: #2b7a4b;
+      background: #e0f2e8;
+    }
+    .task-options button.wrong {
+      border-color: #b13e3e;
+      background: #fce8e8;
+    }
+    .task-options button:disabled {
+      opacity: 0.7;
+      cursor: default;
+    }
+
+    .hint-btn {
+      background: none;
+      border: 1px dashed #b7a392;
+      color: #6b5b4b;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .hint-btn:hover {
+      background: #ede7e1;
+    }
+    .hint-box {
+      background: #f3ede8;
+      border-radius: 16px;
+      padding: 14px 18px;
+      margin-top: 12px;
+      font-size: 15px;
+      border-left: 4px solid #9c6b4b;
+      display: none;
+    }
+    .hint-box.show {
+      display: block;
+    }
+    .task-status {
+      font-size: 14px;
+      color: #6b5b4b;
+      margin-top: 8px;
+    }
+
+    /* Игры */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .game-card {
+      aspect-ratio: 1/1;
+      background: #d9cec3;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      user-select: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    .game-card.flipped {
+      background: #fcf8f5;
+      color: #2d2a24;
+      border: 2px solid #9c6b4b;
+    }
+    .game-card.matched {
+      background: #b8c9b0;
+      color: #2d4a2d;
+      border: 2px solid #3b6b3b;
+      cursor: default;
+      opacity: 0.6;
+    }
+    .game-card:active:not(.flipped):not(.matched) {
+      transform: scale(0.96);
+    }
+
+    /* Рецепт */
+    .recipe-step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+    .recipe-step .num {
+      background: #9c6b4b;
+      color: white;
+      border-radius: 40px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .ingredient-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin: 8px 0 16px;
+    }
+    .ingredient-list li {
+      list-style: none;
+      background: #ede7e1;
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-size: 14px;
+    }
+
+    /* Прогресс */
+    .progress-bar {
+      height: 10px;
+      background: #ede7e1;
+      border-radius: 40px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    .progress-bar .fill {
+      height: 100%;
+      background: #9c6b4b;
+      border-radius: 40px;
+      width: 0%;
+      transition: width 0.4s;
+    }
+
+    /* Адаптив */
+    @media (max-width: 600px) {
+      .app { padding: 16px; }
+      .header { flex-direction: column; align-items: stretch; }
+      .nav { justify-content: center; }
+      .game-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Шапка -->
+  <div class="header">
+    <div class="logo">
+      🧠 Фитнес·Код
+      <span>татарча</span>
+    </div>
+    <div class="nav">
+      <button class="active" data-section="train">Тренировка</button>
+      <button data-section="games">Игры</button>
+      <button data-section="recipes">Рецепты</button>
+      <button data-section="progress">Прогресс</button>
+    </div>
+  </div>
+
+  <!-- ======= СЕКЦИЯ ТРЕНИРОВКА ======= -->
+  <div id="section-train" class="section active">
+    <h2>🧩 Языковая гимнастика</h2>
+    <div class="subtitle">Татарские слова + логика. Нажми на подсказку, если нужно.</div>
+
+    <div id="taskContainer">
+      <!-- Задания будут вставлены JS -->
+    </div>
+  </div>
+
+  <!-- ======= СЕКЦИЯ ИГРЫ ======= -->
+  <div id="section-games" class="section">
+    <h2>🎴 Мемори · Татарча</h2>
+    <div class="subtitle">Найди пары: слово — перевод. Переворачивай карточки.</div>
+    <div id="gameBoard" class="game-grid"></div>
+    <button id="resetGame" style="margin-top:12px; background:#9c6b4b; color:white; border:none; padding:10px 24px; border-radius:40px; font-weight:600; cursor:pointer;">Смешать заново</button>
+    <p id="gameStatus" style="margin-top:12px; color:#5b4d41;"></p>
+  </div>
+
+  <!-- ======= СЕКЦИЯ РЕЦЕПТЫ ======= -->
+  <div id="section-recipes" class="section">
+    <h2>🍴 Эчпочмак (треугольник)</h2>
+    <div class="subtitle">Татарская выпечка — переключись и попробуй</div>
+    <div class="card">
+      <h4 style="margin-bottom:8px;">Ингредиенты</h4>
+      <ul class="ingredient-list">
+        <li>Мука — 500 г</li>
+        <li>Масло слив. — 150 г</li>
+        <li>Кефир — 200 мл</li>
+        <li>Говядина — 400 г</li>
+        <li>Картофель — 3 шт</li>
+        <li>Лук — 2 шт</li>
+        <li>Соль, перец, зира</li>
+      </ul>
+      <h4 style="margin:16px 0 8px;">Приготовление</h4>
+      <div class="recipe-step"><span class="num">1</span><div>Замеси тесто: мука + масло + кефир. Дать отдохнуть 30 мин.</div></div>
+      <div class="recipe-step"><span class="num">2</span><div>Начинка: мясо, картофель, лук нарезать кубиками, смешать со специями.</div></div>
+      <div class="recipe-step"><span class="num">3</span><div>Раскатать лепёшки, выложить начинку, защипнуть треугольником.</div></div>
+      <div class="recipe-step"><span class="num">4</span><div>Выпекать при 180°C 40 минут до румяной корочки.</div></div>
+      <p style="margin-top:12px; font-style:italic; color:#7f6e5e;">🍵 Подавай с бульоном или катыком.</p>
+    </div>
+  </div>
+
+  <!-- ======= СЕКЦИЯ ПРОГРЕСС ======= -->
+  <div id="section-progress" class="section">
+    <h2>📊 Твой прогресс</h2>
+    <div class="subtitle">Задания и игры — всё в одной копилке</div>
+    <div class="card">
+      <p><strong>Выполнено заданий:</strong> <span id="progressTasks">0</span> из 4</p>
+      <div class="progress-bar"><div class="fill" id="progressFill" style="width:0%;"></div></div>
+      <p><strong>Пар в мемори найдено:</strong> <span id="progressPairs">0</span> из 6</p>
+    </div>
+    <div class="card" style="background:#efe6de;">
+      <p style="font-size:15px;">🧠 «Мозг любит новизну. Каждое новое слово — как микро-спорт для нейронов.»</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============ ДАННЫЕ ============
+  // Задания (4 штуки)
+  const tasks = [
+    {
+      id: 0,
+      question: 'Как будет «три» по-татарски?',
+      options: ['Өч', 'Дүрт', 'Бер', 'Ике'],
+      correct: 0,
+      hint: 'Татарские числительные: 1 — бер, 2 — ике, 3 — өч, 4 — дүрт. Вспомни произношение с мягким звуком.'
+    },
+    {
+      id: 1,
+      question: 'Какое слово обозначает «красный»?',
+      options: ['Кызыл', 'Сары', 'Яшел', 'Кара'],
+      correct: 0,
+      hint: 'Цвета: кызыл (красный), сары (жёлтый), яшел (зелёный), кара (чёрный).'
+    },
+    {
+      id: 2,
+      question: '«Кошка» по-татарски — это...',
+      options: ['Песи', 'Эт', 'Сыер', 'Ат'],
+      correct: 0,
+      hint: 'Песи — кошка, эт — собака, сыер — корова, ат — лошадь.'
+    },
+    {
+      id: 3,
+      question: 'Выбери правильный перевод: «Рәхмәт»',
+      options: ['Здравствуйте', 'Спасибо', 'До свидания', 'Извините'],
+      correct: 1,
+      hint: 'Рәхмәт — это «спасибо». Приветствие — «Сәлам», прощание — «Сау бул».'
+    }
+  ];
+
+  // Данные для игры Мемори (6 пар)
+  const pairs = [
+    { word: 'Кызыл', translate: 'Красный' },
+    { word: 'Сары', translate: 'Жёлтый' },
+    { word: 'Яшел', translate: 'Зелёный' },
+    { word: 'Кара', translate: 'Чёрный' },
+    { word: 'Ак', translate: 'Белый' },
+    { word: 'Зәңгәр', translate: 'Синий' }
+  ];
+
+  // ============ СОСТОЯНИЕ ============
+  let taskStates = tasks.map(() => ({ answered: false, selected: null, correct: false }));
+  let gameCards = [];
+  let flippedIndices = [];
+  let matchedPairs = 0;
+  let gameLocked = false;
+
+  // ============ ОТРИСОВКА ЗАДАНИЙ ============
+  function renderTasks() {
+    const container = document.getElementById('taskContainer');
+    container.innerHTML = '';
+    tasks.forEach((task, idx) => {
+      const state = taskStates[idx];
+      const div = document.createElement('div');
+      div.className = 'task';
+      div.innerHTML = `
+        <div class="task-question">${idx+1}. ${task.question}</div>
+        <div class="task-options" id="options-${idx}">
+          ${task.options.map((opt, oi) => `<button data-task="${idx}" data-opt="${oi}">${opt}</button>`).join('')}
+        </div>
+        <button class="hint-btn" data-task="${idx}">💡 Подсказка</button>
+        <div class="hint-box" id="hint-${idx}">${task.hint}</div>
+        <div class="task-status" id="status-${idx}">${state.answered ? (state.correct ? '✅ Верно!' : '❌ Неверно') : 'Ожидает ответа'}</div>
+      `;
+      container.appendChild(div);
+
+      // Вешаем обработчики на кнопки вариантов
+      const optBtns = div.querySelectorAll('.task-options button');
+      optBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const taskId = parseInt(this.dataset.task);
+          const optIdx = parseInt(this.dataset.opt);
+          handleAnswer(taskId, optIdx);
+        });
+      });
+
+      // Подсказка
+      div.querySelector('.hint-btn').addEventListener('click', function(e) {
+        const taskId = parseInt(this.dataset.task);
+        const hintBox = document.getElementById(`hint-${taskId}`);
+        hintBox.classList.toggle('show');
+      });
+
+      // Если уже отвечено - заблокировать кнопки
+      if (state.answered) {
+        const btns = div.querySelectorAll('.task-options button');
+        btns.forEach((b, i) => {
+          b.disabled = true;
+          if (i === state.selected) {
+            b.classList.add(state.correct ? 'correct' : 'wrong');
+          }
+          if (i === task.correct && state.correct === false) {
+            // показываем правильный зелёным, если ответили неверно
+            b.classList.add('correct');
+          }
+        });
+      }
+    });
+    updateProgress();
+  }
+
+  function handleAnswer(taskId, optIdx) {
+    const state = taskStates[taskId];
+    if (state.answered) return;
+    const task = tasks[taskId];
+    const isCorrect = (optIdx === task.correct);
+    state.answered = true;
+    state.selected = optIdx;
+    state.correct = isCorrect;
+
+    // Обновляем внешний вид
+    const container = document.getElementById('taskContainer');
+    const taskDiv = container.children[taskId];
+    const btns = taskDiv.querySelectorAll('.task-options button');
+    btns.forEach((b, i) => {
+      b.disabled = true;
+      if (i === optIdx) {
+        b.classList.add(isCorrect ? 'correct' : 'wrong');
+      }
+      if (i === task.correct && !isCorrect) {
+        b.classList.add('correct');
+      }
+    });
+    const statusDiv = document.getElementById(`status-${taskId}`);
+    statusDiv.textContent = isCorrect ? '✅ Верно!' : '❌ Неверно';
+
+    // Автоматически закрываем подсказку
+    document.getElementById(`hint-${taskId}`).classList.remove('show');
+
+    updateProgress();
+  }
+
+  // ============ ИГРА МЕМОРИ ============
+  function initGame() {
+    // Создаём массив карт: каждая пара дважды
+    const deck = [];
+    pairs.forEach((p, i) => {
+      deck.push({ id: i, type: 'word', text: p.word });
+      deck.push({ id: i, type: 'translate', text: p.translate });
+    });
+    // Перемешиваем
+    shuffleArray(deck);
+    gameCards = deck.map((item, idx) => ({
+      ...item,
+      index: idx,
+      flipped: false,
+      matched: false
+    }));
+    flippedIndices = [];
+    matchedPairs = 0;
+    gameLocked = false;
+    renderGame();
+    updateProgress();
+  }
+
+  function renderGame() {
+    const board = document.getElementById('gameBoard');
+    board.innerHTML = '';
+    gameCards.forEach((card, idx) => {
+      const div = document.createElement('div');
+      div.className = 'game-card';
+      if (card.flipped || card.matched) {
+        div.classList.add('flipped');
+        div.textContent = card.text;
+      } else {
+        div.textContent = '?';
+      }
+      if (card.matched) div.classList.add('matched');
+      div.dataset.index = idx;
+      div.addEventListener('click', () => handleCardClick(idx));
+      board.appendChild(div);
+    });
+    document.getElementById('gameStatus').textContent = `Найдено пар: ${matchedPairs} из ${pairs.length}`;
+    // Обновляем прогресс
+    document.getElementById('progressPairs').textContent = matchedPairs;
+  }
+
+  function handleCardClick(index) {
+    if (gameLocked) return;
+    const card = gameCards[index];
+    if (card.flipped || card.matched) return;
+    // Переворачиваем
+    card.flipped = true;
+    flippedIndices.push(index);
+    renderGame();
+
+    if (flippedIndices.length === 2) {
+      gameLocked = true;
+      const idx1 = flippedIndices[0];
+      const idx2 = flippedIndices[1];
+      const card1 = gameCards[idx1];
+      const card2 = gameCards[idx2];
+      // Проверяем пару: совпадает ли id и разные ли типы
+      if (card1.id === card2.id && card1.type !== card2.type) {
+        // Пара найдена
+        card1.matched = true;
+        card2.matched = true;
+        matchedPairs++;
+        document.getElementById('progressPairs').textContent = matchedPairs;
+        flippedIndices = [];
+        gameLocked = false;
+        renderGame();
+        updateProgress();
+        if (matchedPairs === pairs.length) {
+          document.getElementById('gameStatus').textContent = '🎉 Все пары найдены! Молодец!';
+        }
+      } else {
+        // Не совпало - перевернуть обратно через 0.8с
+        setTimeout(() => {
+          card1.flipped = false;
+          card2.flipped = false;
+          flippedIndices = [];
+          gameLocked = false;
+          renderGame();
+        }, 800);
+      }
+    }
+  }
+
+  function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // ============ ПРОГРЕСС ============
+  function updateProgress() {
+    const done = taskStates.filter(s => s.answered).length;
+    const total = tasks.length;
+    document.getElementById('progressTasks').textContent = done;
+    document.getElementById('progressFill').style.width = `${(done / total) * 100}%`;
+    // Пары уже обновляются в игре
+  }
+
+  // ============ НАВИГАЦИЯ ============
+  document.querySelectorAll('.nav button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const sectionId = this.dataset.section;
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(`section-${sectionId}`).classList.add('active');
+    });
+  });
+
+  // Сброс игры
+  document.getElementById('resetGame').addEventListener('click', initGame);
+
+  // ============ СТАРТ ============
+  renderTasks();
+  initGame();
+</script>
+
+</body>
+</html>
