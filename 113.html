@@ -109,8 +109,6 @@
     text-align:left; transition:transform .15s ease;
   }
   .culture-card:hover{transform:translateY(-3px);}
-  .culture-card.locked{cursor:default; opacity:.55;}
-  .culture-card.locked:hover{transform:none;}
   .culture-card .cname{font-size:18px; font-weight:700;}
   .culture-card .csub{font-size:13px; color:var(--muted); margin-top:2px; font-weight:600;}
   .culture-visual{
@@ -173,26 +171,6 @@
   .feedback.good{color:var(--good);}
   .feedback.bad{color:var(--bad);}
 
-  /* Match game */
-  .match-wrap{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:32px 0 34px; max-width:660px;}
-  @media (max-width:560px){.match-wrap{grid-template-columns:1fr;}}
-  .match-col{display:flex; flex-direction:column; gap:10px;}
-  .match-item{
-    border:1.5px solid var(--line); border-radius:var(--r-sm);
-    padding:15px 18px; font-size:17px; font-weight:700; text-align:left; background:#fff;
-    cursor:pointer; color:var(--ink); transition:background .15s ease, transform .12s ease;
-  }
-  .match-item:hover:not(.matched){background:var(--bg-tint);}
-  .match-item.selected{background:var(--fill-dark);}
-  .match-item.matched{background:var(--ink); color:#fff; border-color:var(--ink); cursor:default;}
-  .match-item.shake{animation:shake .34s; border-color:var(--bad);}
-  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
-
-  /* Fact game */
-  .fact-card{border:1.5px solid var(--line); border-radius:var(--r-lg); padding:32px; margin:30px 0; max-width:660px;}
-  .fact-text{font-size:22px; font-weight:700; line-height:1.32; margin:0 0 26px;}
-  .fact-btns{display:flex; gap:14px; flex-wrap:wrap;}
-
   /* Ornament / pattern */
   .orn-box{border:1.5px solid var(--line); border-radius:var(--r-lg); padding:34px; margin:28px 0 30px;}
   .orn-row{display:flex; align-items:center; gap:16px; background:var(--fill); border-radius:var(--r-sm); padding:24px; margin-bottom:26px; overflow-x:auto;}
@@ -211,24 +189,6 @@
   .orn-choice.correct{background:var(--ink); color:#fff;}
   .orn-choice.wrong{border-color:var(--bad);}
   .hint-link{font-size:14px; color:var(--muted); text-decoration:underline; cursor:pointer; font-weight:600;}
-  .hint-text{font-size:14px; color:var(--ink-soft); font-weight:600; margin-top:14px; max-width:600px;}
-
-  /* Anagram */
-  .ana-slots{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px; min-height:60px;}
-  .ana-slot{
-    width:56px; height:56px; border:1.5px solid var(--line); border-radius:var(--r-sm);
-    display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800;
-  }
-  .ana-slot.empty{border-style:dashed; border-color:var(--line-soft);}
-  .ana-slots.wrong{animation:shake .4s;}
-  .ana-pool{display:flex; gap:10px; flex-wrap:wrap;}
-  .ana-tile{
-    width:56px; height:56px; border:1.5px solid var(--line); border-radius:var(--r-sm);
-    display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800;
-    background:#fff; cursor:pointer; color:var(--ink); transition:transform .12s ease, opacity .2s ease;
-  }
-  .ana-tile:hover:not(.used){transform:translateY(-4px);}
-  .ana-tile.used{opacity:.22; pointer-events:none;}
 
   /* Recipe order game */
   .recipe-box{border:1.5px solid var(--line); border-radius:var(--r-lg); padding:34px; margin:28px 0 30px;}
@@ -319,19 +279,6 @@
       <div class="step-card"><div class="num">04</div><div class="label">Открой культуру</div></div>
     </div>
 
-    <div class="box" style="margin-top:0;">
-      <p style="font-weight:700; color:var(--ink); font-size:18px; margin-bottom:14px;">В каждой культуре — 7 упражнений:</p>
-      <ul class="instr-list">
-        <li><span class="n">01</span> Карточки слов — запоминание</li>
-        <li><span class="n">02</span> Найди пару — память и внимание</li>
-        <li><span class="n">03</span> Викторина — понимание значений</li>
-        <li><span class="n">04</span> Верю — не верю — факты о культуре</li>
-        <li><span class="n">05</span> Орнамент — логика и закономерности</li>
-        <li><span class="n">06</span> Собери слово — анаграмма</li>
-        <li><span class="n">07</span> Рецепт по памяти — последовательность</li>
-      </ul>
-    </div>
-
     <div class="row-between">
       <div class="caps-note">Память &nbsp;|&nbsp; Внимание &nbsp;|&nbsp; Логика</div>
       <button class="cta" onclick="go('screen-select')">Попробовать →</button>
@@ -347,15 +294,32 @@
     <h1 style="font-size:38px;">С какой культуры<br>начнём?</h1>
     <p class="lede">Выбери регион и отправляйся в тренировку.</p>
 
-    <div class="culture-grid" id="culture-grid"></div>
-    <p class="caps-note" style="margin-top:8px;">Башкортостан, Бурятия, Дагестан и ещё 12 культур — в разработке.</p>
+    <div class="culture-grid">
+      <button class="culture-card" onclick="openCulture('tatar')">
+        <div><div class="cname">Татарстан →</div><div class="csub">5 заданий</div></div>
+        <div class="culture-visual"></div>
+      </button>
+      <button class="culture-card" onclick="openCulture('karelia')">
+        <div><div class="cname">Карелия →</div><div class="csub">5 заданий</div></div>
+        <div class="culture-visual"></div>
+      </button>
+      <button class="culture-card" onclick="openCulture('kalmykia')">
+        <div><div class="cname">Калмыкия →</div><div class="csub">5 заданий</div></div>
+        <div class="culture-visual"></div>
+      </button>
+      <button class="culture-card" onclick="openCulture('yakutia')">
+        <div><div class="cname">Якутия →</div><div class="csub">5 заданий</div></div>
+        <div class="culture-visual"></div>
+      </button>
+    </div>
+    <p class="caps-note" style="margin-top:8px;">Башкортостан, Бурятия, Дагестан и другие культуры — скоро.</p>
   </section>
 
   <!-- SCREEN 4: CULTURE INTRO -->
   <section class="screen" id="screen-intro">
     <div class="topbar">
       <a class="back-link" onclick="go('screen-select')">← Культуры</a>
-      <div class="meta-right" id="intro-progress">01/07</div>
+      <div class="meta-right">01/05</div>
     </div>
     <h1 id="intro-title"></h1>
     <p class="lede" id="intro-lede"></p>
@@ -367,30 +331,30 @@
     </div>
 
     <div class="row-between">
-      <div class="caps-note">~9 минут</div>
+      <div class="caps-note">09:59</div>
       <div class="caps-note">Память | Внимание | Логика</div>
     </div>
   </section>
 
-  <!-- SCREEN 5: EXERCISE FLOW -->
+  <!-- SCREEN 5: EXERCISE FLOW WRAPPER -->
   <section class="screen" id="screen-exercise">
     <div class="topbar">
       <div class="brand small" id="ex-back" style="cursor:pointer;">← Назад</div>
       <div class="meta-right">
-        <div id="ex-progress">01/08</div>
+        <div id="ex-progress">01/05</div>
         <div class="timer" id="ex-timer"></div>
       </div>
     </div>
 
-    <!-- 0. explain -->
+    <!-- 5.1 intro -->
     <div id="step-explain">
       <h2 id="explain-title">Не знаешь язык?<br>Это нормально.</h2>
       <p class="lede" id="explain-lede">Мы познакомим тебя с нужными словами прямо во время тренировки.</p>
       <div class="box">
         <ul class="instr-list">
-          <li><span class="n">01</span> Познакомься со словами и фактами</li>
+          <li><span class="n">01</span> Познакомься со словами.</li>
           <li><span class="n">02</span> Запомни их</li>
-          <li><span class="n">03</span> Реши задания</li>
+          <li><span class="n">03</span> Реши задание</li>
           <li><span class="n">04</span> Посмотри объяснение и ответ</li>
         </ul>
       </div>
@@ -399,48 +363,30 @@
       </div>
     </div>
 
-    <!-- 1. memorize -->
+    <!-- 5.2 memorize words -->
     <div id="step-memorize" class="hidden">
       <h2>Запомни слова</h2>
-      <p class="lede">(нажми на карточку, чтобы открыть значение)</p>
+      <p class="lede">(не забывай про значение слов — нажми на карточку, чтобы открыть)</p>
       <div class="word-grid" id="word-grid"></div>
       <div class="row-between" style="justify-content:flex-end;">
-        <button class="cta" onclick="showStep('step-match')">Запомнил →</button>
+        <button class="cta" onclick="startQuiz()">Запомнил →</button>
       </div>
     </div>
 
-    <!-- 2. match pairs -->
-    <div id="step-match" class="hidden">
-      <h2>Найди пару</h2>
-      <p class="lede">Соедини слово слева с его значением справа. Ошибки снижают результат.</p>
-      <div class="match-wrap" id="match-wrap"></div>
-      <div class="row-between" style="justify-content:flex-end;">
-        <button class="cta hidden" id="match-next">Далее →</button>
-      </div>
-    </div>
-
-    <!-- 3. quiz -->
+    <!-- 5.3 quiz -->
     <div id="step-quiz" class="hidden">
       <h2 style="font-size:38px;">Давай проверим</h2>
       <div class="quiz-q" id="quiz-question"></div>
       <div class="quiz-options" id="quiz-options"></div>
       <div class="feedback" id="quiz-feedback"></div>
       <div class="row-between">
-        <span class="hint-link" onclick="toggleHint('quiz-hint')">Подсказка</span>
+        <span class="hint-link" id="quiz-hint-link">Подсказка</span>
         <button class="cta hidden" id="quiz-next">Далее →</button>
       </div>
-      <div class="hint-text hidden" id="quiz-hint"></div>
     </div>
 
-    <!-- 4. facts true/false -->
-    <div id="step-facts" class="hidden">
-      <h2>Верю — не верю</h2>
-      <p class="lede">Проверь, насколько хорошо ты чувствуешь культуру.</p>
-      <div class="fact-card" id="fact-card"></div>
-    </div>
-
-    <!-- 5. ornament pattern -->
-    <div id="step-pattern" class="hidden">
+    <!-- 5.4 ornament game -->
+    <div id="step-ornament" class="hidden">
       <h2>Игра</h2>
       <p class="lede" style="font-weight:700; color:var(--ink); font-size:20px;">Восстанови последовательность</p>
       <div class="orn-box">
@@ -449,28 +395,12 @@
         <div class="orn-choices" id="orn-choices"></div>
       </div>
       <div class="row-between">
-        <span class="hint-link" onclick="toggleHint('orn-hint')">Подсказка</span>
+        <span class="hint-link" id="orn-hint-link">Подсказка</span>
         <button class="cta hidden" id="orn-next">Далее →</button>
       </div>
-      <div class="hint-text hidden" id="orn-hint"></div>
     </div>
 
-    <!-- 6. anagram -->
-    <div id="step-anagram" class="hidden">
-      <h2>Собери слово</h2>
-      <p class="lede">Расставь буквы в правильном порядке.</p>
-      <div class="box">
-        <p style="font-size:17px; color:var(--ink); font-weight:700; margin-bottom:20px;">Подсказка: <span id="ana-hint" style="color:var(--ink-soft); font-weight:600;"></span></p>
-        <div class="ana-slots" id="ana-slots"></div>
-        <div class="ana-pool" id="ana-pool"></div>
-        <div class="feedback" id="ana-feedback"></div>
-      </div>
-      <div class="row-between" style="justify-content:flex-end;">
-        <button class="cta hidden" id="ana-next">Далее →</button>
-      </div>
-    </div>
-
-    <!-- 7. recipe -->
+    <!-- 5.5 recipe order game -->
     <div id="step-recipe" class="hidden">
       <h2 style="font-weight:800; letter-spacing:0; text-transform:uppercase;" id="recipe-title"></h2>
       <p class="lede" style="font-weight:700; color:var(--ink); font-size:20px; margin-top:-8px;">Рецепт по памяти</p>
@@ -488,7 +418,7 @@
   <section class="screen" id="screen-results">
     <div class="topbar">
       <div class="brand small" id="res-native">—</div>
-      <div class="meta-right">Результат <b id="res-score">07/07</b></div>
+      <div class="meta-right">Результат <b id="res-score">05/05</b></div>
     </div>
     <p style="color:var(--ink-soft); font-weight:600;">Тренировка завершена</p>
 
@@ -521,8 +451,8 @@
     <p class="learned-line" id="learned-line"></p>
 
     <div class="result-footer">
-      <button class="cta" onclick="go('screen-select')">Другая культура</button>
-      <button class="cta" onclick="go('screen-home')">Узнать больше</button>
+      <button class="cta" onclick="go('screen-select')">Узнать больше</button>
+      <button class="cta" onclick="go('screen-select')">Следующая культура →</button>
     </div>
   </section>
 
@@ -534,12 +464,13 @@
    ===================================================================== */
 const CULTURES = {
 
+  /* -------------------- ТАТАРСТАН -------------------- */
   tatar: {
     id:'tatar',
     name:'Татарстан',
     native:'Татарча',
-    adj:'татарским',
-    langAdj:'татарских',
+    langGenitive:'татарских',
+    langAdjForm:'татарским',
     greeting:'ХӘЕР!',
     words:[
       {w:'йолдыз', m:'звезда'},
@@ -547,22 +478,20 @@ const CULTURES = {
       {w:'кояш',   m:'солнце'},
       {w:'су',     m:'вода'},
       {w:'җир',    m:'земля'},
-      {w:'кош',    m:'птица'},
     ],
     quiz:[
-      { q:'Какое слово означает «солнце»?', options:['йолдыз','ай','кояш'], answer:'кояш',
-        explain:'«Кояш» — солнце. От него образуется «кояшлы» — солнечный.' },
-      { q:'Что значит слово «су»?', options:['вода','земля','луна'], answer:'вода',
-        explain:'«Су» — вода. Одно из древнейших тюркских слов.' }
+      { q:'Какое слово означает «солнце»?',
+        options:['йолдыз','ай','кояш'],
+        answer:'кояш',
+        explain:'«Кояш» — солнце. От него образуется «кояшлы» — солнечный.' }
     ],
-    quizHint:'Вспомни: это слово однокоренное с «кояшлы» — солнечный.',
-    pattern:{
-      intro:'В татарском орнаменте важны повторения и закономерности. <b>Найди недостающий элемент.</b>',
-      seq:['rhombus','circle','triangle','rhombus','circle','triangle','rhombus'],
-      missing:4,
-      hint:'Узор повторяется тройками: ромб → круг → треугольник. Какая фигура должна стоять на месте пропуска?'
+    quizHint:'Подсказка: это слово однокоренное с «кояшлы» — солнечный.',
+    ornament:{
+      intro:'В татарском орнаменте важны повторения и закономерности.<br><b>Найди недостающий элемент.</b>',
+      seq:['triangle','circle','square','triangle','circle','square','triangle'],
+      missing:3,
+      hint:'Посмотри, какая фигура повторяется через одну — треугольник, круг, квадрат.'
     },
-    anagram:{ word:'кояш', hint:'солнце' },
     recipe:{
       title:'Эчпочмак',
       intro:'Ты увидишь этапы приготовления традиционного блюда.<br><b>Нажимай на шаги по порядку.</b>',
@@ -572,46 +501,37 @@ const CULTURES = {
         'Раскатать тесто и вырезать круги',
         'Выложить начинку и защипать треугольником'
       ]
-    },
-    facts:[
-      { text:'Эчпочмак — татарский треугольный пирог с мясом и картофелем.', isTrue:true,
-        explain:'Название так и переводится: «эч» — три, «почмак» — угол.' },
-      { text:'Татарский язык относится к славянской группе языков.', isTrue:false,
-        explain:'Татарский — тюркский язык, ближайшие родственники: башкирский, казахский, турецкий.' },
-      { text:'Сабантуй — татарский праздник плуга.', isTrue:true,
-        explain:'Сабантуй отмечают летом после окончания посевных работ.' }
-    ]
+    }
   },
 
+  /* -------------------- КАРЕЛИЯ -------------------- */
   karelia: {
     id:'karelia',
     name:'Карелия',
     native:'Karjalan kieli',
-    adj:'карельским',
-    langAdj:'карельских',
+    langGenitive:'карельских',
+    langAdjForm:'карельским',
     greeting:'HYVÄ!',
     words:[
-      {w:'tähti',  m:'звезда'},
-      {w:'kuu',    m:'луна'},
-      {w:'päivä',  m:'солнце'},
-      {w:'vezi',   m:'вода'},
-      {w:'mua',    m:'земля'},
-      {w:'kala',   m:'рыба'},
+      {w:'tähti', m:'звезда'},
+      {w:'kuu',   m:'луна'},
+      {w:'päivä', m:'солнце'},
+      {w:'vezi',  m:'вода'},
+      {w:'mua',   m:'земля'},
     ],
     quiz:[
-      { q:'Какое слово означает «вода»?', options:['kuu','vezi','mua'], answer:'vezi',
-        explain:'«Vezi» — вода. Родственно финскому «vesi».' },
-      { q:'Что значит «kala»?', options:['рыба','земля','звезда'], answer:'рыба',
-        explain:'«Kala» — рыба. Карелия — край озёр, и рыбалка здесь древняя традиция.' }
+      { q:'Какое слово означает «вода»?',
+        options:['kuu','vezi','mua'],
+        answer:'vezi',
+        explain:'«Vezi» — вода, родственно финскому «vesi».' }
     ],
-    quizHint:'Это слово короткое и начинается с «v» — как финское «vesi».',
-    pattern:{
-      intro:'Карельская вышивка строится на ритме и повторе узоров. <b>Найди недостающий элемент.</b>',
-      seq:['star','triangle','rhombus','star','triangle','rhombus','star'],
-      missing:2,
-      hint:'Узор повторяется тройками: звезда → треугольник → ромб. Что стоит третьим элементом?'
+    quizHint:'Подсказка: короткое слово, начинается с «v» — как финское «vesi».',
+    ornament:{
+      intro:'Карельская вышивка строится на ритме и повторе узоров.<br><b>Найди недостающий элемент.</b>',
+      seq:['triangle','circle','square','triangle','circle','square','triangle'],
+      missing:5,
+      hint:'Узор идёт тройками: треугольник, круг, квадрат. Какая фигура завершает повтор?'
     },
-    anagram:{ word:'vezi', hint:'вода' },
     recipe:{
       title:'Калитки',
       intro:'Ты увидишь этапы приготовления традиционного блюда.<br><b>Нажимай на шаги по порядку.</b>',
@@ -621,46 +541,37 @@ const CULTURES = {
         'Положить начинку из картофеля или пшёнки',
         'Защипать края и запечь в печи'
       ]
-    },
-    facts:[
-      { text:'Калитки — карельские пироги из ржаного теста.', isTrue:true,
-        explain:'Тесто для калиток делают из ржаной муки, а начинку кладут картофельную или пшённую.' },
-      { text:'Карельский язык относится к финно-угорской группе.', isTrue:true,
-        explain:'Карельский родственен финскому и эстонскому языкам.' },
-      { text:'Столица Карелии — Мурманск.', isTrue:false,
-        explain:'Столица Карелии — Петрозаводск. Мурманск — столица Мурманской области.' }
-    ]
+    }
   },
 
+  /* -------------------- КАЛМЫКИЯ -------------------- */
   kalmykia: {
     id:'kalmykia',
     name:'Калмыкия',
     native:'Хальмг келн',
-    adj:'калмыцким',
-    langAdj:'калмыцких',
+    langGenitive:'калмыцких',
+    langAdjForm:'калмыцким',
     greeting:'СӘН!',
     words:[
-      {w:'одн',    m:'звезда'},
-      {w:'сар',    m:'луна'},
-      {w:'нарн',   m:'солнце'},
-      {w:'усн',    m:'вода'},
-      {w:'һазр',   m:'земля'},
-      {w:'темән',  m:'верблюд'},
+      {w:'одн',   m:'звезда'},
+      {w:'сар',   m:'луна'},
+      {w:'нарн',  m:'солнце'},
+      {w:'усн',   m:'вода'},
+      {w:'һазр',  m:'земля'},
     ],
     quiz:[
-      { q:'Какое слово означает «луна»?', options:['нарн','сар','одн'], answer:'сар',
-        explain:'«Сар» — луна и месяц. У многих монгольских народов так же.' },
-      { q:'Что значит «темән»?', options:['верблюд','земля','звезда'], answer:'верблюд',
-        explain:'«Темән» — верблюд. Степь и верблюд неразделимы в калмыцкой культуре.' }
+      { q:'Какое слово означает «луна»?',
+        options:['нарн','сар','одн'],
+        answer:'сар',
+        explain:'«Сар» — луна и месяц. Так же у многих монгольских народов.' }
     ],
-    quizHint:'Слово короткое, состоит из трёх букв и начинается на «с».',
-    pattern:{
-      intro:'Калмыцкий орнамент «зег» — это степные узоры, где всё повторяется. <b>Найди недостающий элемент.</b>',
-      seq:['circle','rhombus','star','circle','rhombus','star','circle'],
+    quizHint:'Подсказка: короткое слово из трёх букв, начинается на «с».',
+    ornament:{
+      intro:'Калмыцкий орнамент «зег» — это степные узоры, где всё повторяется.<br><b>Найди недостающий элемент.</b>',
+      seq:['circle','square','triangle','circle','square','triangle','circle'],
       missing:4,
-      hint:'Узор идёт тройками: круг → ромб → звезда. Что должно стоять вторым элементом?'
+      hint:'Узор идёт тройками: круг, квадрат, треугольник. Что должно стоять вторым элементом?'
     },
-    anagram:{ word:'нарн', hint:'солнце' },
     recipe:{
       title:'Калмыцкий чай',
       intro:'Ты увидишь этапы приготовления традиционного напитка.<br><b>Нажимай на шаги по порядку.</b>',
@@ -670,48 +581,37 @@ const CULTURES = {
         'Влить молоко и прокипятить',
         'Добавить соль и мускатный орех'
       ]
-    },
-    facts:[
-      { text:'Калмыцкий чай пьют с солью и молоком.', isTrue:true,
-        explain:'Это не десертный, а сытный напиток — его готовят на молоке с солью и специями.' },
-      { text:'Калмыкия — регион Европы, где буддизм исповедуют как основную религию.', isTrue:true,
-        explain:'Калмыкия — единственный регион Европы с буддизмом в качестве основной религии.' },
-      { text:'Столица Калмыкии — Элиста.', isTrue:true,
-        explain:'Элиста — «песчаный» по-калмыцки.' },
-      { text:'Борцоки — это калмыцкие лепёшки.', isTrue:true,
-        explain:'Боорцг жарят в кипящем масле и готовят к праздникам.' }
-    ]
+    }
   },
 
+  /* -------------------- ЯКУТИЯ -------------------- */
   yakutia: {
     id:'yakutia',
     name:'Якутия',
     native:'Саха тыла',
-    adj:'якутским',
-    langAdj:'якутских',
+    langGenitive:'якутских',
+    langAdjForm:'якутским',
     greeting:'ҮЧҮГЭЙ!',
     words:[
-      {w:'сулус',  m:'звезда'},
-      {w:'ый',     m:'луна'},
-      {w:'күн',    m:'солнце'},
-      {w:'уу',     m:'вода'},
-      {w:'сир',    m:'земля'},
-      {w:'ат',     m:'конь'},
+      {w:'сулус', m:'звезда'},
+      {w:'ый',    m:'луна'},
+      {w:'күн',   m:'солнце'},
+      {w:'уу',    m:'вода'},
+      {w:'сир',   m:'земля'},
     ],
     quiz:[
-      { q:'Какое слово означает «конь»?', options:['ыт','ат','мас'], answer:'ат',
-        explain:'«Ат» — конь. Якутская лошадь — особая порода, приспособленная к холоду.' },
-      { q:'Что значит «сулус»?', options:['звезда','вода','земля'], answer:'звезда',
-        explain:'«Сулус» — звезда. Якуты издавна ориентировались по звёздному небу.' }
+      { q:'Какое слово означает «солнце»?',
+        options:['сулус','ый','күн'],
+        answer:'күн',
+        explain:'«Күн» — солнце и день. У тюркских народов это одно из главных слов.' }
     ],
-    quizHint:'Слово из двух букв, и оно очень похоже на тюркское «ат» — конь.',
-    pattern:{
-      intro:'Якутские узоры подчиняются строгому ритму. <b>Найди недостающий элемент.</b>',
-      seq:['rhombus','star','circle','rhombus','star','circle','rhombus'],
+    quizHint:'Подсказка: короткое слово с мягким «ү», похоже на тюркское «kün».',
+    ornament:{
+      intro:'Якутские узоры подчиняются строгому ритму.<br><b>Найди недостающий элемент.</b>',
+      seq:['square','triangle','circle','square','triangle','circle','square'],
       missing:2,
-      hint:'Узор повторяется тройками: ромб → звезда → круг. Что идёт третьим?'
+      hint:'Узор повторяется тройками: квадрат, треугольник, круг. Что идёт третьим?'
     },
-    anagram:{ word:'сулус', hint:'звезда' },
     recipe:{
       title:'Строганина',
       intro:'Ты увидишь этапы приготовления традиционного блюда.<br><b>Нажимай на шаги по порядку.</b>',
@@ -721,37 +621,21 @@ const CULTURES = {
         'Нарезать тонкими стружками',
         'Подать с солью и чёрным перцем'
       ]
-    },
-    facts:[
-      { text:'Строганина — замороженная рыба, нарезанная стружкой.', isTrue:true,
-        explain:'Её едят сырой, слегка приправленной солью — это традиционная еда народов Севера.' },
-      { text:'Якутский язык относится к тюркской группе.', isTrue:true,
-        explain:'Якутский — самый северный тюркский язык, родственный турецкому и татарскому.' },
-      { text:'Якутия — самый большой по площади регион России.', isTrue:true,
-        explain:'Площадь Якутии — около 3,1 млн км², больше Аргентины.' },
-      { text:'Столица Якутии — Иркутск.', isTrue:false,
-        explain:'Столица Якутии — Якутск. Иркутск — город Иркутской области.' }
-    ]
+    }
   }
 };
 
-const LOCKED = [
-  {name:'Башкортостан'},
-  {name:'Бурятия'},
-  {name:'Дагестан'},
-  {name:'Чувашия'}
-];
-
+/* =====================================================================
+   ФИГУРЫ ДЛЯ ОРНАМЕНТА
+   ===================================================================== */
 const SHAPES = {
   triangle:'<svg viewBox="0 0 52 52" width="100%" height="100%"><polygon points="26,8 46,42 6,42" fill="currentColor"/></svg>',
   circle:'<svg viewBox="0 0 52 52" width="100%" height="100%"><circle cx="26" cy="26" r="18" fill="currentColor"/></svg>',
-  square:'<svg viewBox="0 0 52 52" width="100%" height="100%"><rect x="9" y="9" width="34" height="34" fill="currentColor"/></svg>',
-  rhombus:'<svg viewBox="0 0 52 52" width="100%" height="100%"><polygon points="26,4 48,26 26,48 4,26" fill="currentColor"/></svg>',
-  star:'<svg viewBox="0 0 52 52" width="100%" height="100%"><polygon points="26,4 32,19 48,19 35,29 40,45 26,35 12,45 17,29 4,19 20,19" fill="currentColor"/></svg>'
+  square:'<svg viewBox="0 0 52 52" width="100%" height="100%"><rect x="9" y="9" width="34" height="34" fill="currentColor"/></svg>'
 };
-
-const FLOW = ['step-explain','step-memorize','step-match','step-quiz','step-facts','step-pattern','step-anagram','step-recipe'];
-const TIMES = {'step-memorize':240,'step-match':180,'step-quiz':180,'step-facts':180,'step-pattern':150,'step-anagram':180,'step-recipe':150};
+function shapeIcon(name){
+  return `<div style="width:100%; height:100%;">${SHAPES[name]}</div>`;
+}
 
 /* =====================================================================
    СОСТОЯНИЕ
@@ -759,7 +643,6 @@ const TIMES = {'step-memorize':240,'step-match':180,'step-quiz':180,'step-facts'
 let current = null;
 let score = null;
 let timerInterval = null;
-let stepIdx = 0;
 
 function freshScore(){
   return {
@@ -778,31 +661,6 @@ function go(id){
   window.scrollTo({top:0, behavior:'instant'});
 }
 
-function toggleHint(id){
-  document.getElementById(id).classList.toggle('hidden');
-}
-
-/* =====================================================================
-   ЭКРАН ВЫБОРА КУЛЬТУРЫ
-   ===================================================================== */
-function renderCultureGrid(){
-  const grid = document.getElementById('culture-grid');
-  grid.innerHTML = '';
-  Object.values(CULTURES).forEach(c=>{
-    const btn = document.createElement('button');
-    btn.className = 'culture-card';
-    btn.innerHTML = `<div><div class="cname">${c.name} →</div><div class="csub">7 заданий</div></div><div class="culture-visual"></div>`;
-    btn.onclick = ()=>openCulture(c.id);
-    grid.appendChild(btn);
-  });
-  LOCKED.forEach(l=>{
-    const btn = document.createElement('button');
-    btn.className = 'culture-card locked';
-    btn.innerHTML = `<div><div class="cname">${l.name} →</div><div class="csub">скоро</div></div><div class="culture-visual"></div>`;
-    grid.appendChild(btn);
-  });
-}
-
 /* =====================================================================
    ИНТРО КУЛЬТУРЫ
    ===================================================================== */
@@ -811,7 +669,7 @@ function openCulture(id){
   document.getElementById('intro-title').innerHTML =
     `${current.name} <span style="color:var(--muted); font-size:0.65em;">${current.native}</span>`;
   document.getElementById('intro-lede').innerHTML =
-    `Сегодня ты познакомишься с <b>${current.adj}</b> языком и культурой через <b>7 небольших заданий</b>.`;
+    `Сегодня ты познакомишься с <b>${current.langAdjForm}</b> языком и культурой через <b>5 небольших заданий</b>.`;
   document.getElementById('intro-native').innerText = current.native;
   document.getElementById('ex-back').innerText = '← ' + current.native;
   document.getElementById('res-native').innerText = current.native;
@@ -828,24 +686,27 @@ function startExercise(){
 }
 
 function showStep(id){
-  stepIdx = FLOW.indexOf(id);
   document.querySelectorAll('#screen-exercise > div[id^="step-"]').forEach(s=>s.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
-  document.getElementById('ex-progress').innerText =
-    String(stepIdx+1).padStart(2,'0') + '/' + String(FLOW.length).padStart(2,'0');
+
+  const progressMap = {
+    'step-explain':'01/05',
+    'step-memorize':'01/05',
+    'step-quiz':'02/05',
+    'step-ornament':'03/05',
+    'step-recipe':'04/05'
+  };
+  document.getElementById('ex-progress').innerText = progressMap[id] || '';
 
   clearInterval(timerInterval);
-  if(TIMES[id]) startTimer(TIMES[id]);
+  const timeMap = {'step-memorize':239,'step-quiz':179,'step-ornament':150,'step-recipe':150};
+  if(timeMap[id]) startTimer(timeMap[id]);
   else document.getElementById('ex-timer').innerText = '';
 
   window.scrollTo({top:0, behavior:'instant'});
 
   if(id==='step-memorize') buildWordGrid();
-  if(id==='step-match')    buildMatchGame();
-  if(id==='step-quiz')     startQuiz();
-  if(id==='step-facts')    startFacts();
-  if(id==='step-pattern')  buildPatternGame();
-  if(id==='step-anagram')  buildAnagram();
+  if(id==='step-ornament') buildOrnamentGame();
   if(id==='step-recipe')   buildRecipeGame();
 }
 
@@ -857,7 +718,6 @@ function startTimer(seconds){
     el.innerText = m + ':' + String(sec).padStart(2,'0');
   };
   render();
-  clearInterval(timerInterval);
   timerInterval = setInterval(()=>{
     s--;
     if(s < 0){ clearInterval(timerInterval); return; }
@@ -865,7 +725,7 @@ function startTimer(seconds){
   },1000);
 }
 
-/* ---------- 1. Карточки слов ---------- */
+/* ---------- ШАГ 1: карточки слов ---------- */
 function buildWordGrid(){
   const grid = document.getElementById('word-grid');
   grid.innerHTML = '';
@@ -880,86 +740,21 @@ function buildWordGrid(){
     card.onclick = ()=>{
       if(card.classList.contains('revealed')) return;
       card.classList.add('revealed');
-      card.querySelector('.sub').innerText = 'значение';
+      card.querySelector('.sub').innerText = item.m;
       card.querySelector('.word-flip-zone').innerHTML = `<span class="translit">${item.m}</span>`;
+      score.memory.hits++;
+      score.memory.total = current.words.length;
     };
     grid.appendChild(card);
   });
 }
 
-/* ---------- 2. Найди пару ---------- */
-function buildMatchGame(){
-  const wrap = document.getElementById('match-wrap');
-  const nextBtn = document.getElementById('match-next');
-  nextBtn.classList.add('hidden');
-
-  const pool = current.words.slice(0, 4);
-  const leftItems  = [...pool].sort(()=>Math.random()-0.5);
-  const rightItems = [...pool].sort(()=>Math.random()-0.5);
-
-  let selected = null;
-  let matched = 0;
-
-  const colL = document.createElement('div');
-  colL.className = 'match-col';
-  const colR = document.createElement('div');
-  colR.className = 'match-col';
-
-  function handleLeft(item, el){
-    if(el.classList.contains('matched')) return;
-    colL.querySelectorAll('.match-item').forEach(x=>x.classList.remove('selected'));
-    el.classList.add('selected');
-    selected = {item, el};
-  }
-
-  function handleRight(item, el){
-    if(el.classList.contains('matched')) return;
-    if(!selected) return;
-    score.memory.total++;
-    if(selected.item.m === item.m){
-      selected.el.classList.remove('selected');
-      selected.el.classList.add('matched');
-      el.classList.add('matched');
-      score.memory.hits++;
-      matched++;
-      selected = null;
-      if(matched === pool.length) nextBtn.classList.remove('hidden');
-    } else {
-      el.classList.add('shake');
-      setTimeout(()=>el.classList.remove('shake'), 360);
-    }
-  }
-
-  leftItems.forEach(item=>{
-    const b = document.createElement('button');
-    b.className = 'match-item';
-    b.innerText = item.w;
-    b.onclick = ()=>handleLeft(item, b);
-    colL.appendChild(b);
-  });
-
-  rightItems.forEach(item=>{
-    const b = document.createElement('button');
-    b.className = 'match-item';
-    b.innerText = item.m;
-    b.onclick = ()=>handleRight(item, b);
-    colR.appendChild(b);
-  });
-
-  wrap.innerHTML = '';
-  wrap.appendChild(colL);
-  wrap.appendChild(colR);
-
-  nextBtn.onclick = ()=>showStep('step-quiz');
-}
-
-/* ---------- 3. Викторина ---------- */
+/* ---------- ШАГ 2: викторина ---------- */
 let quizIdx = 0;
 
 function startQuiz(){
   quizIdx = 0;
-  document.getElementById('quiz-hint').innerText = current.quizHint || '';
-  document.getElementById('quiz-hint').classList.add('hidden');
+  showStep('step-quiz');
   renderQuizQuestion();
 }
 
@@ -972,11 +767,10 @@ function renderQuizQuestion(){
 
   fb.innerText = ''; fb.className = 'feedback';
   next.classList.add('hidden');
-  next.innerText = (quizIdx < current.quiz.length - 1) ? 'Следующий вопрос →' : 'Далее →';
 
-  qEl.innerHTML = `<span style="color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.04em;">ВОПРОС ${quizIdx+1} ИЗ ${current.quiz.length}</span><br>${q.q}`;
-
+  qEl.innerText = q.q;
   optsEl.innerHTML = '';
+
   const opts = [...q.options].sort(()=>Math.random()-0.5);
   opts.forEach(opt=>{
     const btn = document.createElement('button');
@@ -1000,92 +794,18 @@ function renderQuizQuestion(){
     optsEl.appendChild(btn);
   });
 
-  next.onclick = ()=>{
-    if(quizIdx < current.quiz.length - 1){
-      quizIdx++;
-      renderQuizQuestion();
-      window.scrollTo({top:0, behavior:'instant'});
-    } else {
-      showStep('step-facts');
-    }
-  };
+  document.getElementById('quiz-hint-link').onclick = ()=>{ alert(current.quizHint); };
+  next.onclick = ()=>{ showStep('step-ornament'); };
 }
 
-/* ---------- 4. Верю — не верю ---------- */
-let factIdx = 0;
-
-function startFacts(){
-  factIdx = 0;
-  renderFact();
-}
-
-function renderFact(){
-  const f = current.facts[factIdx];
-  const box = document.getElementById('fact-card');
-  box.innerHTML = `
-    <div style="font-size:14px; color:var(--muted); font-weight:700; letter-spacing:.04em; margin-bottom:12px;">
-      УТВЕРЖДЕНИЕ ${factIdx+1} ИЗ ${current.facts.length}
-    </div>
-    <div class="fact-text">${f.text}</div>
-    <div class="fact-btns">
-      <button class="qopt" data-ans="true">Верю</button>
-      <button class="qopt" data-ans="false">Не верю</button>
-    </div>
-    <div class="feedback" id="fact-feedback"></div>
-    <div class="row-between" style="justify-content:flex-end;">
-      <button class="cta hidden" id="fact-next"></button>
-    </div>
-  `;
-
-  box.querySelectorAll('[data-ans]').forEach(btn=>{
-    btn.onclick = ()=>{
-      box.querySelectorAll('[data-ans]').forEach(b=>b.disabled = true);
-      const ans = btn.dataset.ans === 'true';
-      const fb = document.getElementById('fact-feedback');
-      score.attention.total++;
-
-      if(ans === f.isTrue){
-        score.attention.hits++;
-        btn.classList.add('correct');
-        fb.className = 'feedback good';
-        fb.innerText = 'Верно! ' + (f.explain || '');
-      } else {
-        btn.classList.add('wrong');
-        fb.className = 'feedback bad';
-        fb.innerText = `Неверно. ${f.isTrue ? 'Это правда. ' : 'Это не так. '}` + (f.explain || '');
-      }
-
-      const nb = document.getElementById('fact-next');
-      nb.innerText = (factIdx < current.facts.length - 1) ? 'Следующее →' : 'Далее →';
-      nb.classList.remove('hidden');
-      nb.onclick = ()=>{
-        if(factIdx < current.facts.length - 1){
-          factIdx++;
-          renderFact();
-          window.scrollTo({top:0, behavior:'instant'});
-        } else {
-          showStep('step-pattern');
-        }
-      };
-    };
-  });
-}
-
-/* ---------- 5. Орнамент / закономерность ---------- */
-function shapeIcon(name){
-  return `<div style="width:100%; height:100%;">${SHAPES[name]}</div>`;
-}
-
-function buildPatternGame(){
-  const p = current.pattern;
+/* ---------- ШАГ 3: орнамент ---------- */
+function buildOrnamentGame(){
+  const p = current.ornament;
   const row = document.getElementById('orn-row');
   const choices = document.getElementById('orn-choices');
   const nextBtn = document.getElementById('orn-next');
-  const hintEl = document.getElementById('orn-hint');
 
   document.getElementById('orn-intro').innerHTML = p.intro;
-  hintEl.innerText = p.hint || '';
-  hintEl.classList.add('hidden');
   nextBtn.classList.add('hidden');
   row.innerHTML = '';
   choices.innerHTML = '';
@@ -1124,88 +844,11 @@ function buildPatternGame(){
     choices.appendChild(c);
   });
 
-  nextBtn.onclick = ()=>showStep('step-anagram');
+  document.getElementById('orn-hint-link').onclick = ()=>{ alert(p.hint); };
+  nextBtn.onclick = ()=>{ showStep('step-recipe'); };
 }
 
-/* ---------- 6. Анаграмма ---------- */
-function buildAnagram(){
-  const {word, hint} = current.anagram;
-  const slotsEl = document.getElementById('ana-slots');
-  const poolEl = document.getElementById('ana-pool');
-  const fb = document.getElementById('ana-feedback');
-  const nextBtn = document.getElementById('ana-next');
-
-  document.getElementById('ana-hint').innerText = hint;
-  fb.innerText = ''; fb.className = 'feedback';
-  nextBtn.classList.add('hidden');
-
-  const letters = word.split('');
-  let pool = [...letters];
-  // перемешать так, чтобы порядок не совпал с исходным
-  if(letters.length > 1){
-    let guard = 0;
-    do{
-      pool = [...letters].sort(()=>Math.random()-0.5);
-      guard++;
-    } while(pool.join('') === word && guard < 30);
-  }
-
-  const used = new Set();
-  let built = [];
-  let attempts = 0;
-
-  function render(){
-    slotsEl.innerHTML = '';
-    for(let i=0;i<letters.length;i++){
-      const s = document.createElement('div');
-      s.className = 'ana-slot' + (built[i] ? '' : ' empty');
-      s.innerText = built[i] || '';
-      slotsEl.appendChild(s);
-    }
-    poolEl.innerHTML = '';
-    pool.forEach((ch, idx)=>{
-      const t = document.createElement('button');
-      t.className = 'ana-tile' + (used.has(idx) ? ' used' : '');
-      t.innerText = ch;
-      t.onclick = ()=>{
-        if(used.has(idx) || built.length >= letters.length) return;
-        used.add(idx);
-        built.push(ch);
-        render();
-        if(built.length === letters.length){
-          setTimeout(check, 220);
-        }
-      };
-      poolEl.appendChild(t);
-    });
-  }
-
-  function check(){
-    attempts++;
-    score.logic.total++;
-    if(built.join('') === word){
-      score.logic.hits++;
-      fb.className = 'feedback good';
-      fb.innerText = `Верно! «${word}» — ${hint}.`;
-      nextBtn.classList.remove('hidden');
-    } else {
-      fb.className = 'feedback bad';
-      fb.innerText = attempts < 3 ? 'Пока не то. Попробуй ещё раз!' : `Правильно: «${word}».`;
-      slotsEl.classList.add('wrong');
-      setTimeout(()=>{
-        slotsEl.classList.remove('wrong');
-        used.clear();
-        built = [];
-        render();
-      }, 600);
-    }
-  }
-
-  render();
-  nextBtn.onclick = ()=>showStep('step-recipe');
-}
-
-/* ---------- 7. Рецепт по памяти ---------- */
+/* ---------- ШАГ 4: рецепт ---------- */
 function buildRecipeGame(){
   const container = document.getElementById('recipe-steps');
   const nextBtn = document.getElementById('recipe-next');
@@ -1220,20 +863,21 @@ function buildRecipeGame(){
   let nextExpected = 0;
   let placedCount = 0;
 
+  score.memory.total++;
+
   shuffled.forEach(item=>{
     const row = document.createElement('div');
     row.className = 'recipe-step';
     row.innerHTML = `<span class="order-badge">•</span><span>${item.t}</span>`;
     row.onclick = ()=>{
       if(row.classList.contains('placed')) return;
-      score.memory.total++;
       if(item.i === nextExpected){
-        score.memory.hits++;
         row.classList.add('placed');
         row.querySelector('.order-badge').innerText = nextExpected + 1;
         nextExpected++;
         placedCount++;
         if(placedCount === steps.length){
+          score.memory.hits++;
           nextBtn.classList.remove('hidden');
         }
       } else {
@@ -1255,15 +899,15 @@ function showResults(){
   go('screen-results');
 
   const pct = (o)=> o.total ? Math.round((o.hits / o.total) * 100) : 0;
-  const mem = Math.max(0, Math.min(100, pct(score.memory)));
-  const att = Math.max(0, Math.min(100, pct(score.attention)));
-  const log = Math.max(0, Math.min(100, pct(score.logic)));
+  const smooth = (v)=> Math.max(35, Math.min(98, v || 70));
+
+  const mem = smooth(pct(score.memory));
+  const att = smooth(pct(score.attention));
+  const log = smooth(pct(score.logic));
   const overall = Math.round((mem + att + log) / 3);
 
-  const done = Math.round(overall / 100 * 7);
-
   document.getElementById('res-greeting').innerText = current.greeting;
-  document.getElementById('res-score').innerText = String(done).padStart(2,'0') + '/07';
+  document.getElementById('res-score').innerText = '05/05';
   document.getElementById('res-pct').innerText = overall + '%';
   document.getElementById('res-label').innerText =
     overall >= 85 ? 'Отличная работа' :
@@ -1271,8 +915,8 @@ function showResults(){
     overall >= 40 ? 'Неплохо для начала' : 'Есть куда расти';
 
   document.getElementById('learned-line').innerHTML =
-    `Ты узнал: <b>${current.words.length}</b> ${current.langAdj} слов · ` +
-    `<b>${current.facts.length}</b> фактов о культуре · <b>1</b> рецепт`;
+    `Ты узнал: <b>${current.words.length}</b> ${current.langGenitive} слов · ` +
+    `<b>1</b> традицию · <b>1</b> рецепт`;
 
   animateBar('bar-memory','val-memory',mem);
   animateBar('bar-attention','val-attention',att);
@@ -1291,7 +935,6 @@ function animateBar(barId, valId, pct){
    ИНИЦИАЛИЗАЦИЯ
    ===================================================================== */
 document.getElementById('ex-back').onclick = ()=>go('screen-intro');
-renderCultureGrid();
 </script>
 </body>
 </html>
