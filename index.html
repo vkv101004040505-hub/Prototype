@@ -60,7 +60,6 @@
   .brand.small{font-weight:700; font-size:17px;}
   .topnav{display:flex; align-items:center; gap:22px; font-size:15px; color:var(--ink);}
   .topnav a{color:var(--ink); text-decoration:none; border-bottom:1px solid var(--ink); padding-bottom:2px; cursor:pointer;}
-  .dot{width:26px; height:26px; border-radius:50%; background:var(--fill-dark); display:inline-block; flex:none;}
   .back-link{font-size:15px; text-decoration:none; color:var(--ink); border-bottom:1px solid var(--ink); padding-bottom:2px; cursor:pointer;}
   .meta-right{font-size:15px; color:var(--muted); text-align:right; font-weight:600;}
   .meta-right b{color:var(--ink);}
@@ -94,12 +93,6 @@
   .row-between{display:flex; align-items:center; justify-content:space-between; margin-top:20px; flex-wrap:wrap; gap:14px;}
   .caps-note{font-size:14px; color:var(--muted); font-weight:600;}
   .cta{font-size:16px; font-weight:700; text-decoration:none; color:var(--ink); border-bottom:1.5px solid var(--ink); padding-bottom:3px; cursor:pointer; background:none; border-top:none; border-left:none; border-right:none;}
-  .cta-disabled{
-    color:var(--muted);
-    border-bottom-color:var(--line-soft);
-    cursor:not-allowed;
-    pointer-events:none;
-  }
 
   /* Culture grid */
   .culture-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:30px 0 24px;}
@@ -202,7 +195,7 @@
     width:26px; height:26px; border-radius:50%; background:var(--fill); display:flex; align-items:center; justify-content:center;
     font-size:13px; font-weight:800; flex:none;
   }
-  .recipe-step.placed{border-color:var(--ink); background:var(--fill);}
+  .recipe-step.placed{border-color:var(--ink); background:var(--fill); cursor:default;}
   .recipe-step.placed .order-badge{background:var(--ink); color:#fff;}
 
   /* Results */
@@ -269,7 +262,6 @@
     .brand{font-size:17px;}
     .brand.small{font-size:15px;}
     .topnav{gap:12px; font-size:14px;}
-    .dot{width:22px; height:22px;}
     .back-link{font-size:14px;}
     .meta-right{font-size:13px;}
     .timer{font-size:13px;}
@@ -367,7 +359,6 @@
     <div class="topbar">
       <div class="brand">Мозговой фитнес</div>
       <div class="topnav">
-        <span class="dot" title="Язык"></span>
         <a onclick="go('screen-how')">О проекте</a>
       </div>
     </div>
@@ -378,11 +369,6 @@
       <button class="pill" onclick="go('screen-select')">Внимание</button>
       <button class="pill" onclick="go('screen-select')">Логика</button>
     </div>
-
-    <div style="margin-top:60px;">
-      <p class="lede" style="max-width:620px;">Молодёжная платформа, которая превращает культуру народов России в материал для тренировки мозга: слова, традиции и рецепты становятся упражнениями на память, внимание и логику.</p>
-      <button class="cta" onclick="go('screen-select')">Начать тренировку →</button>
-    </div>
   </section>
 
   <!-- SCREEN 2: HOW IT WORKS -->
@@ -390,7 +376,6 @@
     <div class="topbar">
       <div class="brand">Мозговой фитнес</div>
       <div class="topnav">
-        <span class="dot"></span>
         <a onclick="go('screen-home')">На главную</a>
       </div>
     </div>
@@ -440,7 +425,7 @@
         <div class="culture-visual"></div>
       </button>
     </div>
-    <button class="cta cta-disabled" disabled>Все культуры</button>
+    <span class="cta" style="cursor:default;">Все культуры</span>
   </section>
 
   <!-- SCREEN 4: CULTURE INTRO -->
@@ -528,16 +513,28 @@
       </div>
     </div>
 
-    <!-- 5.5 recipe order game -->
+    <!-- 5.5 recipe: memorize -> check -->
     <div id="step-recipe" class="hidden">
       <h2 style="font-weight:800; letter-spacing:0; text-transform:uppercase;" id="recipe-title"></h2>
       <p class="lede" style="font-weight:700; color:var(--ink); font-size:20px; margin-top:-8px;">Рецепт по памяти</p>
       <div class="recipe-box">
-        <p style="margin-bottom:6px;" id="recipe-intro"></p>
-        <div class="recipe-steps" id="recipe-steps"></div>
+
+        <!-- Фаза 1: показываем правильный порядок -->
+        <div id="recipe-memorize-phase">
+          <p style="margin:0 0 20px;">Ты увидишь этапы приготовления традиционного блюда.<br><b>Запомни их порядок.</b></p>
+          <div class="recipe-steps" id="recipe-steps-memorize"></div>
+        </div>
+
+        <!-- Фаза 2: проверка -->
+        <div id="recipe-check-phase" class="hidden">
+          <p style="margin:0 0 20px;"><b>Восстанови порядок.</b> Нажимай на шаги в правильной последовательности.</p>
+          <div class="recipe-steps" id="recipe-steps-check"></div>
+        </div>
+
       </div>
       <div class="row-between" style="justify-content:flex-end;">
-        <button class="cta hidden" id="recipe-next">Запомнил →</button>
+        <button class="cta" id="recipe-memorize-btn">Запомнил →</button>
+        <button class="cta hidden" id="recipe-next">Далее →</button>
       </div>
     </div>
   </section>
@@ -972,20 +969,55 @@ function buildOrnamentGame(){
   nextBtn.onclick = ()=>{ showStep('step-recipe'); };
 }
 
-/* ---------- ШАГ 4: рецепт ---------- */
+/* ---------- ШАГ 4: рецепт (сначала запоминание, потом проверка) ---------- */
 function buildRecipeGame(){
-  const container = document.getElementById('recipe-steps');
-  const nextBtn = document.getElementById('recipe-next');
+  const memPhase   = document.getElementById('recipe-memorize-phase');
+  const checkPhase = document.getElementById('recipe-check-phase');
+  const memWrap    = document.getElementById('recipe-steps-memorize');
+  const checkWrap  = document.getElementById('recipe-steps-check');
+  const memBtn     = document.getElementById('recipe-memorize-btn');
+  const nextBtn    = document.getElementById('recipe-next');
 
   document.getElementById('recipe-title').innerText = current.recipe.title;
-  document.getElementById('recipe-intro').innerHTML = current.recipe.intro;
+
+  // сброс на первую фазу
+  memPhase.classList.remove('hidden');
+  checkPhase.classList.add('hidden');
+  memBtn.classList.remove('hidden');
   nextBtn.classList.add('hidden');
-  container.innerHTML = '';
+  memWrap.innerHTML = '';
+  checkWrap.innerHTML = '';
+
+  // ---- Фаза 1: показываем правильный порядок ----
+  current.recipe.steps.forEach((t, i)=>{
+    const row = document.createElement('div');
+    row.className = 'recipe-step placed';
+    row.innerHTML = `<span class="order-badge">${i + 1}</span><span>${t}</span>`;
+    memWrap.appendChild(row);
+  });
+
+  memBtn.onclick = ()=>{
+    memPhase.classList.add('hidden');
+    checkPhase.classList.remove('hidden');
+    memBtn.classList.add('hidden');
+    startRecipeCheck();
+  };
+}
+
+/* ---------- ШАГ 4, фаза 2: восстанови порядок ---------- */
+function startRecipeCheck(){
+  const wrap    = document.getElementById('recipe-steps-check');
+  const nextBtn = document.getElementById('recipe-next');
+
+  wrap.innerHTML = '';
+  nextBtn.classList.add('hidden');
 
   const steps = current.recipe.steps;
   const shuffled = steps.map((t,i)=>({t,i})).sort(()=>Math.random()-0.5);
+
   let nextExpected = 0;
-  let placedCount = 0;
+  let placedCount  = 0;
+  let mistakes     = 0;
 
   score.memory.total++;
 
@@ -1001,15 +1033,16 @@ function buildRecipeGame(){
         nextExpected++;
         placedCount++;
         if(placedCount === steps.length){
-          score.memory.hits++;
+          if(mistakes === 0) score.memory.hits++; // без ошибок — засчитываем
           nextBtn.classList.remove('hidden');
         }
       } else {
+        mistakes++;
         row.style.borderColor = 'var(--bad)';
         setTimeout(()=>{ row.style.borderColor = ''; }, 420);
       }
     };
-    container.appendChild(row);
+    wrap.appendChild(row);
   });
 
   nextBtn.onclick = showResults;
