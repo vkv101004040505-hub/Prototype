@@ -217,9 +217,7 @@
   .center{text-align:center;}
   .hidden{display:none !important;}
 
-  /* ============================================================
-     АДАПТАЦИЯ — только размеры и раскладка, визуал не трогаем
-     ============================================================ */
+  /* АДАПТАЦИЯ */
 
   /* Большие мониторы: чуть шире контейнер */
   @media (min-width:1200px){
@@ -272,7 +270,6 @@
 
     .pill{padding:11px 20px; font-size:14px;}
 
-    /* «Как это работает» — в столбик со стрелками вниз */
     .steps-wrap{flex-direction:column; gap:8px; margin:26px 0 30px;}
     .step-arrow{transform:rotate(90deg); align-self:flex-start; margin-left:14px; font-size:16px;}
     .step-card{min-height:auto; padding:16px 14px;}
@@ -519,13 +516,11 @@
       <p class="lede" style="font-weight:700; color:var(--ink); font-size:20px; margin-top:-8px;">Рецепт по памяти</p>
       <div class="recipe-box">
 
-        <!-- Фаза 1: показываем правильный порядок -->
         <div id="recipe-memorize-phase">
           <p style="margin:0 0 20px;">Ты увидишь этапы приготовления традиционного блюда.<br><b>Запомни их порядок.</b></p>
           <div class="recipe-steps" id="recipe-steps-memorize"></div>
         </div>
 
-        <!-- Фаза 2: проверка -->
         <div id="recipe-check-phase" class="hidden">
           <p style="margin:0 0 20px;"><b>Восстанови порядок.</b> Нажимай на шаги в правильной последовательности.</p>
           <div class="recipe-steps" id="recipe-steps-check"></div>
@@ -584,9 +579,7 @@
 </div>
 
 <script>
-/* =====================================================================
-   ДАННЫЕ КУЛЬТУР
-   ===================================================================== */
+/* ДАННЫЕ КУЛЬТУР */
 const CULTURES = {
 
   tatar: {
@@ -746,9 +739,7 @@ const CULTURES = {
   }
 };
 
-/* =====================================================================
-   ФИГУРЫ ДЛЯ ОРНАМЕНТА
-   ===================================================================== */
+/* ФИГУРЫ ДЛЯ ОРНАМЕНТА */
 const SHAPES = {
   triangle:'<svg viewBox="0 0 52 52" width="100%" height="100%"><polygon points="26,8 46,42 6,42" fill="currentColor"/></svg>',
   circle:'<svg viewBox="0 0 52 52" width="100%" height="100%"><circle cx="26" cy="26" r="18" fill="currentColor"/></svg>',
@@ -758,9 +749,7 @@ function shapeIcon(name){
   return `<div style="width:100%; height:100%;">${SHAPES[name]}</div>`;
 }
 
-/* =====================================================================
-   СОСТОЯНИЕ
-   ===================================================================== */
+/* СОСТОЯНИЕ */
 let current = null;
 let score = null;
 let timerInterval = null;
@@ -773,18 +762,14 @@ function freshScore(){
   };
 }
 
-/* =====================================================================
-   НАВИГАЦИЯ
-   ===================================================================== */
+/* НАВИГАЦИЯ */
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo({top:0, behavior:'instant'});
 }
 
-/* =====================================================================
-   ИНТРО КУЛЬТУРЫ
-   ===================================================================== */
+/* ИНТРО КУЛЬТУРЫ */
 function openCulture(id){
   current = CULTURES[id];
   document.getElementById('intro-title').innerHTML =
@@ -797,9 +782,7 @@ function openCulture(id){
   go('screen-intro');
 }
 
-/* =====================================================================
-   УПРАВЛЕНИЕ ПОТОКОМ УПРАЖНЕНИЙ
-   ===================================================================== */
+/* УПРАВЛЕНИЕ ПОТОКОМ УПРАЖНЕНИЙ */
 function startExercise(){
   score = freshScore();
   go('screen-exercise');
@@ -846,7 +829,7 @@ function startTimer(seconds){
   },1000);
 }
 
-/* ---------- ШАГ 1: карточки слов ---------- */
+/* ШАГ 1: карточки слов */
 function buildWordGrid(){
   const grid = document.getElementById('word-grid');
   grid.innerHTML = '';
@@ -870,7 +853,7 @@ function buildWordGrid(){
   });
 }
 
-/* ---------- ШАГ 2: викторина ---------- */
+/* ШАГ 2: викторина */
 let quizIdx = 0;
 
 function startQuiz(){
@@ -919,7 +902,7 @@ function renderQuizQuestion(){
   next.onclick = ()=>{ showStep('step-ornament'); };
 }
 
-/* ---------- ШАГ 3: орнамент ---------- */
+/* ШАГ 3: орнамент */
 function buildOrnamentGame(){
   const p = current.ornament;
   const row = document.getElementById('orn-row');
@@ -969,7 +952,7 @@ function buildOrnamentGame(){
   nextBtn.onclick = ()=>{ showStep('step-recipe'); };
 }
 
-/* ---------- ШАГ 4: рецепт (сначала запоминание, потом проверка) ---------- */
+/* ШАГ 4: рецепт (сначала запоминание, потом проверка) */
 function buildRecipeGame(){
   const memPhase   = document.getElementById('recipe-memorize-phase');
   const checkPhase = document.getElementById('recipe-check-phase');
@@ -980,7 +963,6 @@ function buildRecipeGame(){
 
   document.getElementById('recipe-title').innerText = current.recipe.title;
 
-  // сброс на первую фазу
   memPhase.classList.remove('hidden');
   checkPhase.classList.add('hidden');
   memBtn.classList.remove('hidden');
@@ -988,7 +970,6 @@ function buildRecipeGame(){
   memWrap.innerHTML = '';
   checkWrap.innerHTML = '';
 
-  // ---- Фаза 1: показываем правильный порядок ----
   current.recipe.steps.forEach((t, i)=>{
     const row = document.createElement('div');
     row.className = 'recipe-step placed';
@@ -1004,7 +985,7 @@ function buildRecipeGame(){
   };
 }
 
-/* ---------- ШАГ 4, фаза 2: восстанови порядок ---------- */
+/* ШАГ 4, фаза 2: восстанови порядок */
 function startRecipeCheck(){
   const wrap    = document.getElementById('recipe-steps-check');
   const nextBtn = document.getElementById('recipe-next');
@@ -1033,7 +1014,7 @@ function startRecipeCheck(){
         nextExpected++;
         placedCount++;
         if(placedCount === steps.length){
-          if(mistakes === 0) score.memory.hits++; // без ошибок — засчитываем
+          if(mistakes === 0) score.memory.hits++;
           nextBtn.classList.remove('hidden');
         }
       } else {
@@ -1048,9 +1029,7 @@ function startRecipeCheck(){
   nextBtn.onclick = showResults;
 }
 
-/* =====================================================================
-   РЕЗУЛЬТАТЫ
-   ===================================================================== */
+/* РЕЗУЛЬТАТЫ */
 function showResults(){
   clearInterval(timerInterval);
   go('screen-results');
@@ -1088,9 +1067,7 @@ function animateBar(barId, valId, pct){
   requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ bar.style.width = pct + '%'; }); });
 }
 
-/* =====================================================================
-   ИНИЦИАЛИЗАЦИЯ
-   ===================================================================== */
+/* ИНИЦИАЛИЗАЦИЯ */
 document.getElementById('ex-back').onclick = ()=>go('screen-intro');
 </script>
 </body>
