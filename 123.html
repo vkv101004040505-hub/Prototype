@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мозговой фитнес — тренируй мозг, открывай культуры</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#151515;
+    --ink-soft:#4a4a4a;
+    --muted:#9a9a9a;
+    --line:#151515;
+    --line-soft:#dcdcdc;
+    --fill:#e7e7e7;
+    --fill-dark:#d3d3d3;
+    --bg:#ffffff;
+    --bg-tint:#f5f4f2;
+    --accent:#151515;
+    --good:#2f6b3f;
+    --bad:#9a3b3b;
+
+    /* Design system */
+    --design-blue:#414bd0;
+    --design-blue-2:#5962df;
+    --design-pink:#e6a9e9;
+    --design-bg:#eef0f7;
+
+    --r-lg:28px;
+    --r-md:20px;
+    --r-sm:14px;
+    --r-pill:999px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0; overflow-x:hidden;}
+  body{
+    font-family:'Manrope',system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:#fff;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.45;
+  }
+  button{font-family:inherit;}
+
+  .app{
+    max-width:960px;margin:0 auto;min-height:100vh;position:relative;padding:0 28px;
+    --region-accent:var(--design-blue);
+    --region-tint:#e8eafb;
+  }
+  .screen{display:none; padding:36px 0 80px;}
+  .screen.active{display:block;}
+
+  /* Top bar */
+  .topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:52px;}
+  .brand{font-weight:800; font-size:19px; letter-spacing:-0.01em;}
+  .brand.small{font-weight:700; font-size:17px;}
+  .topnav{display:flex; align-items:center; gap:14px; font-size:16px; color:var(--design-blue);}
+  .topnav a{color:var(--design-blue); text-decoration:none; border-bottom:1.5px solid var(--design-blue); padding-bottom:2px; cursor:pointer;}
+  .lang-label{color:var(--design-blue); font-size:16px;}
+  .lang-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    color:var(--design-blue); font-size:15px; font-weight:700;
+    padding:4px 14px; border:1.8px solid var(--design-blue);
+    border-radius:var(--r-pill); background:#f3c4f0;
+    cursor:pointer;
+  }
+  .back-link{font-size:15px; text-decoration:none; color:var(--ink); border-bottom:1.5px solid var(--ink); padding-bottom:2px; cursor:pointer; background:none; border-top:none; border-left:none; border-right:none;}
+  .meta-right{font-size:15px; color:var(--muted); text-align:right; font-weight:600;}
+  .meta-right b{color:var(--ink);}
+  .timer{font-size:15px; color:var(--muted); margin-top:4px; font-variant-numeric:tabular-nums;}
+
+  /* Circle progress badge */
+  .progress-circle{
+    width:56px; height:56px; border-radius:50%;
+    border:1.8px solid var(--region-accent, var(--design-blue));
+    color:var(--region-accent, var(--design-blue));
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px; font-weight:800;
+    font-variant-numeric:tabular-nums;
+  }
+
+  h1{font-size:44px; font-weight:800; line-height:1.08; letter-spacing:-0.02em; margin:0 0 18px;}
+  h2{font-size:30px; font-weight:800; line-height:1.15; margin:0 0 10px; letter-spacing:-0.02em;}
+  .lede{font-size:17px; color:var(--ink-soft); max-width:520px; margin:0 0 34px;}
+  .lede b{color:var(--ink);}
+
+  /* Pills */
+  .pill-row{display:flex; gap:12px; flex-wrap:wrap;}
+  .pill{
+    border:1.8px solid #8b91e4; border-radius:var(--r-pill);
+    padding:12px 26px; font-size:20px; font-weight:700; background:transparent;
+    cursor:pointer; color:var(--design-blue); transition:background .15s ease;
+  }
+  .pill:hover{background:#e8eafb;}
+  .pill:active{background:#dfe3fa;}
+
+  /* Primary CTA — filled dark button like mockups */
+  .btn-primary{
+    background:var(--region-accent, var(--design-blue));
+    color:#fff; border:none; cursor:pointer;
+    border-radius:var(--r-pill);
+    padding:14px 30px; font-size:16px; font-weight:700;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:filter .15s ease, transform .1s ease;
+  }
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-primary:active{transform:translateY(1px);}
+
+  /* Link CTA */
+  .cta{
+    font-size:16px; font-weight:700; text-decoration:none;
+    color:var(--design-blue); border-bottom:1.5px solid var(--design-blue);
+    padding-bottom:2px; cursor:pointer; background:none;
+    border-top:none; border-left:none; border-right:none;
+  }
+
+  /* How it works */
+  .steps-wrap{display:flex; align-items:stretch; gap:10px; margin:38px 0 44px;}
+  .step-card{
+    flex:1;
+    border:1.8px solid #8b91e4; border-radius:var(--r-md);
+    padding:22px 18px 18px; min-height:150px; display:flex; flex-direction:column; justify-content:space-between;
+    background:#fff;
+  }
+  .step-card .num{color:var(--muted); font-weight:700; font-size:15px; text-align:center;}
+  .step-card .label{font-size:20px; font-weight:800; line-height:1.15; text-align:center; color:var(--design-blue);}
+  .step-arrow{align-self:center; color:var(--design-blue); font-size:20px;}
+
+  .row-between{display:flex; align-items:center; justify-content:space-between; margin-top:20px; flex-wrap:wrap; gap:14px;}
+  .caps-note{font-size:14px; color:var(--muted); font-weight:600;}
+
+  /* Culture grid */
+  .culture-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:30px 0 24px;}
+  .culture-card{
+    border:1.8px solid #c9cdf3; border-radius:var(--r-md);
+    padding:20px 18px 0; cursor:pointer; background:var(--bg);
+    display:flex; flex-direction:column; justify-content:space-between; min-height:210px;
+    text-align:left; transition:transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .culture-card:hover{transform:translateY(-3px); border-color:var(--design-blue); background:#f6f7fd;}
+  .culture-card .cname{font-size:18px; font-weight:700; color:var(--design-blue);}
+  .culture-card .csub{font-size:13px; color:var(--muted); margin-top:2px; font-weight:600;}
+
+  /* Culture intro (task list card) */
+  .task-hero-card{
+    border:none; border-radius:var(--r-lg);
+    padding:34px; margin:36px 0 30px; max-width:440px; background:var(--region-tint);
+    position:relative;
+  }
+  .task-hero-card .idx{
+    position:absolute; top:26px; right:30px;
+    font-weight:800; color:var(--region-accent); font-size:15px;
+  }
+  .task-hero-card .tname{font-size:34px; font-weight:800; margin-bottom:14px; color:var(--ink);}
+  .task-hero-card .start{font-size:15px; font-weight:700; cursor:pointer;}
+
+  /* Generic box */
+  .box{
+    border:1.8px solid #d5d8ee; border-radius:var(--r-lg);
+    padding:30px 30px 26px; margin:28px 0 36px;
+  }
+  .box p{margin:0 0 6px; font-size:16px; color:var(--ink-soft);}
+  .box p b{color:var(--ink);}
+  .instr-list{list-style:none; padding:0; margin:0; counter-reset:step;}
+  .instr-list li{display:flex; gap:14px; align-items:baseline; padding:5px 0; font-size:16px; font-weight:600;}
+  .instr-list li .n{color:var(--muted); font-weight:800; font-size:15px; min-width:24px;}
+
+  /* Word cards */
+  .word-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin:30px 0 34px;}
+  .word-card{
+    border:1.8px solid #d5d8ee; border-radius:var(--r-md);
+    padding:16px 12px 12px; min-height:200px; display:flex; flex-direction:column;
+    align-items:center; justify-content:space-between; cursor:pointer; background:#fff;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .word-card:hover{transform:translateY(-3px); border-color:var(--region-accent);}
+  .word-card .front{font-size:20px; font-weight:800; word-break:break-word; text-align:center; margin-top:4px;}
+  .word-card .icon{
+    width:64px; height:64px; margin:6px 0 4px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--region-accent, var(--design-blue));
+  }
+  .word-card .icon svg{width:100%; height:100%;}
+  .word-card .sub{font-size:14px; color:var(--region-accent, var(--design-blue)); font-weight:700; text-align:center; min-height:20px;}
+
+  /* Quiz */
+  .quiz-q{font-size:22px; font-weight:700; margin:34px 0 22px; line-height:1.3;}
+  .quiz-options{display:flex; gap:14px; flex-wrap:wrap;}
+  .qopt{
+    border:1.8px solid #8b91e4; border-radius:var(--r-pill);
+    padding:16px 34px; font-size:18px; font-weight:700; background:transparent; cursor:pointer;
+    color:var(--design-blue); transition:background .15s ease;
+    text-transform:lowercase;
+  }
+  .qopt:first-letter{text-transform:uppercase;}
+  .qopt:hover:not(:disabled){background:#e8eafb;}
+  .qopt.correct{background:var(--region-accent, var(--design-blue)); color:#fff; border-color:var(--region-accent, var(--design-blue));}
+  .qopt.wrong{background:#f2e3e3; border-color:var(--bad); color:var(--bad);}
+  .qopt:disabled{cursor:default;}
+  .feedback{margin-top:22px; font-size:15px; font-weight:700; max-width:640px;}
+  .feedback.good{color:var(--good);}
+  .feedback.bad{color:var(--bad);}
+
+  /* Ornament */
+  .orn-box{border:1.8px solid #d5d8ee; border-radius:var(--r-lg); padding:34px; margin:28px 0 30px;}
+  .orn-row{display:flex; align-items:center; gap:16px; background:var(--region-tint, #e8eafb); border-radius:var(--r-sm); padding:24px; margin-bottom:26px; overflow-x:auto;}
+  .orn-shape{width:52px; height:52px; flex:none; color:var(--region-accent, var(--design-blue));}
+  .orn-blank{
+    width:52px; height:52px; flex:none; border:2px dashed var(--region-accent, var(--design-blue)); border-radius:10px;
+    display:flex; align-items:center; justify-content:center; color:var(--region-accent, var(--design-blue)); font-weight:800;
+  }
+  .orn-choices{display:flex; gap:14px; flex-wrap:wrap;}
+  .orn-choice{
+    border:1.8px solid #8b91e4; border-radius:var(--r-md);
+    width:76px; height:76px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; background:#fff; color:var(--design-blue); padding:14px; transition:background .15s ease;
+  }
+  .orn-choice:hover{background:#f6f7fd;}
+  .orn-choice.correct{background:var(--region-accent, var(--design-blue)); color:#fff; border-color:var(--region-accent, var(--design-blue));}
+  .orn-choice.wrong{border-color:var(--bad);}
+  .hint-link{font-size:14px; color:var(--muted); text-decoration:underline; cursor:pointer; font-weight:600;}
+
+  /* Recipe */
+  .recipe-box{border:1.8px solid #d5d8ee; border-radius:var(--r-lg); padding:34px; margin:28px 0 30px;}
+  .recipe-steps{display:flex; flex-direction:column; gap:10px; margin-top:20px;}
+  .recipe-view-box{border:1.8px solid #d5d8ee; border-radius:var(--r-lg); padding:34px; margin:28px 0 30px;}
+  .recipe-food-row{display:flex; align-items:center; gap:18px; margin-bottom:6px;}
+  .food-badge{width:64px; height:64px; object-fit:contain; flex:none;}
+  .recipe-step.static{cursor:default;}
+  .recipe-step{
+    border:1.8px solid #d5d8ee; border-radius:var(--r-sm);
+    padding:14px 18px; font-size:16px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:14px;
+    background:#fff; transition:background .15s ease, border-color .15s ease;
+  }
+  .recipe-step .order-badge{
+    width:26px; height:26px; border-radius:50%; background:var(--fill); display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:800; flex:none;
+  }
+  .recipe-step.placed{border-color:var(--region-accent, var(--design-blue)); background:var(--region-tint, #e8eafb);}
+  .recipe-step.placed .order-badge{background:var(--region-accent, var(--design-blue)); color:#fff;}
+  .recipe-step.static .order-badge{background:var(--region-accent, var(--design-blue)); color:#fff;}
+
+  /* Regional theme accents */
+  .theme-tatar{--region-accent:#b8863b; --region-tint:#f4ead4;}
+  .theme-karelia{--region-accent:#c2497f; --region-tint:#f7e0ea;}
+  .theme-kalmykia{--region-accent:#d2432b; --region-tint:#fbe3da;}
+  .theme-yakutia{--region-accent:#3f6f93; --region-tint:#e5eef4;}
+
+  /* Culture illustration in intro & selection */
+  .culture-thumb{
+    margin-top:14px; border-radius:var(--r-sm) var(--r-sm) 0 0; height:110px;
+    background:var(--region-tint); display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .culture-thumb svg{width:80px; height:80px;}
+
+  .culture-hero{
+    width:100%; aspect-ratio:16/7; border-radius:var(--r-lg); border:none;
+    overflow:hidden; margin:0 0 30px; background:var(--region-tint);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .culture-hero svg{width:auto; height:78%;}
+  .culture-hero img{width:100%; height:100%; object-fit:cover; display:block;}
+
+  /* Results */
+  .result-head{text-align:center; margin:20px 0 10px;}
+  .result-head .big{font-size:56px; font-weight:800; letter-spacing:-0.01em; margin:0;}
+  .result-sub-row{display:flex; align-items:center; justify-content:center; gap:16px; margin:10px 0 40px; flex-wrap:wrap;}
+  .result-sub-row .label{font-size:20px; font-weight:700; color:var(--ink-soft);}
+  .pct-badge{border:1.8px solid var(--region-accent); border-radius:var(--r-pill); padding:10px 24px; font-size:22px; font-weight:800; color:var(--region-accent);}
+  .bars-box{border:1.8px solid #d5d8ee; border-radius:var(--r-lg); padding:30px 34px; max-width:560px; margin:0 auto 34px;}
+  .bar-row{display:flex; align-items:center; gap:18px; padding:12px 0;}
+  .bar-row .bname{width:110px; font-size:17px; font-weight:700; flex:none;}
+  .bar-track{flex:1; height:22px; border-radius:var(--r-pill); border:1.8px solid var(--region-accent); background:#fff; overflow:hidden;}
+  .bar-fill{height:100%; background:#b7d98a; width:0%; transition:width 1.1s cubic-bezier(.2,.8,.2,1);}
+  .bar-val{width:48px; text-align:right; font-weight:800; font-size:16px;}
+  .learned-line{text-align:center; font-size:17px; color:var(--ink-soft); margin-bottom:44px;}
+  .learned-line b{color:var(--ink);}
+  .result-footer{display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:16px;}
+
+  .center{text-align:center;}
+  .hidden{display:none !important;}
+
+  /* ============================================================
+     LANDING (designer match)
+     ============================================================ */
+  #screen-home{
+    min-height:720px;
+    position:relative;
+    overflow:hidden;
+    background:var(--design-bg);
+    margin:0 -28px;
+    padding:54px 62px 90px;
+  }
+  #screen-home::before{
+    content:"";
+    position:absolute;
+    width:300px;height:300px;
+    border:4px solid rgba(230,169,233,.72);
+    border-radius:50%;
+    right:-52px;top:108px;
+  }
+  #screen-home::after{
+    content:"";
+    position:absolute;
+    width:390px;height:150px;
+    right:-55px;bottom:-72px;
+    border-radius:50% 50% 0 0;
+    background:rgba(65,75,208,.36);
+    border:4px solid rgba(230,169,233,.65);
+    box-shadow:90px 18px 0 -5px rgba(65,75,208,.7),
+               160px 0 0 -18px rgba(230,169,233,.45);
+  }
+  #screen-home .topbar{margin-bottom:112px;position:relative;z-index:3;}
+  #screen-home .brand{font-size:24px;letter-spacing:-.035em;}
+  #screen-home .topnav{gap:22px;font-size:20px;}
+  #screen-home .topnav a{font-size:20px;}
+  #screen-home .lang-label{font-size:20px;}
+  #screen-home .lang-pill{font-size:18px;padding:5px 15px 6px;}
+  #screen-home h1{
+    position:relative;z-index:2;
+    max-width:720px;
+    font-size:60px;
+    line-height:1.02;
+    letter-spacing:-.045em;
+    margin:0 0 36px;
+  }
+  #screen-home .pill-row{position:relative;z-index:3;gap:14px;}
+  #screen-home .pill{
+    padding:11px 28px 12px;
+    font-size:22px;
+  }
+  #screen-home .designer-note{
+    position:relative;z-index:3;
+    margin:20px 0 0 14px;
+    color:var(--design-blue);
+    font-size:16px;
+    line-height:1.35;
+    max-width:650px;
+  }
+  #screen-home .designer-illustration{
+    position:absolute;
+    right:35px;top:160px;
+    width:255px;height:255px;
+    z-index:1;
+    pointer-events:none;
+  }
+  #screen-home .designer-illustration .cap{
+    position:absolute;left:78px;top:40px;width:98px;height:45px;
+    background:#171717;transform:skew(-18deg) rotate(-10deg);
+    border-radius:8px 18px 2px 4px;
+  }
+  #screen-home .designer-illustration .tassel{
+    position:absolute;left:82px;top:78px;width:8px;height:45px;background:#171717;
+    transform:rotate(8deg);
+  }
+  #screen-home .designer-illustration .tassel::after{
+    content:"";position:absolute;left:-7px;bottom:-9px;width:20px;height:20px;
+    border-left:5px solid #171717;border-bottom:5px solid #171717;transform:rotate(-10deg);
+  }
+  #screen-home .designer-illustration .cloud{
+    position:absolute;right:10px;top:62px;width:115px;height:75px;
+    background:#f6a78e;border-radius:55% 45% 50% 55%;
+    box-shadow:-48px 8px 0 #efb5dc,-22px -17px 0 #f3b3bf,23px -9px 0 #f3a7a2;
+  }
+  #screen-home .designer-illustration .person-body{
+    position:absolute;right:53px;top:125px;width:55px;height:92px;
+    border-left:8px solid #171717;border-bottom:8px solid #171717;border-radius:0 0 25px 28px;
+    transform:skew(-8deg);
+  }
+  #screen-home .designer-illustration .person-leg{
+    position:absolute;right:30px;top:184px;width:42px;height:55px;
+    border-left:8px solid #171717;border-bottom:8px solid #171717;border-radius:0 0 20px 18px;
+    transform:rotate(12deg);
+  }
+  #screen-home .designer-illustration .flower{
+    position:absolute;right:98px;top:125px;width:28px;height:28px;
+    border:6px solid #171717;border-radius:50%;
+  }
+  #screen-home .designer-illustration .flower::before,
+  #screen-home .designer-illustration .flower::after{
+    content:"";position:absolute;left:7px;top:20px;width:6px;height:52px;background:#171717;border-radius:8px;
+  }
+  #screen-home .designer-illustration .flower::after{transform:rotate(45deg);transform-origin:top;left:11px;}
+
+  /* ============================================================
+     АДАПТАЦИЯ
+     ============================================================ */
+  @media (min-width:1200px){ .app{max-width:1080px;} }
+
+  @media (max-width:900px){
+    .app{padding:0 22px;}
+    .screen{padding:28px 0 70px;}
+    .topbar{margin-bottom:40px;}
+    h1{font-size:36px;}
+    h2{font-size:26px;}
+    .lede{font-size:16px;}
+    .culture-grid{grid-template-columns:repeat(2,1fr);}
+    .word-grid{grid-template-columns:repeat(3,1fr); gap:12px;}
+    .word-card{min-height:190px; padding:14px 10px 12px;}
+    .word-card .front{font-size:17px;}
+    .word-card .icon{width:56px;height:56px;}
+    .step-card{padding:18px 14px 14px; min-height:130px;}
+    .step-card .label{font-size:17px;}
+    .task-hero-card{padding:28px; max-width:100%;}
+    .task-hero-card .tname{font-size:30px;}
+    .box{padding:24px 22px 22px;}
+    .orn-box{padding:26px;}
+    .orn-shape, .orn-blank{width:46px; height:46px;}
+    .orn-choice{width:68px; height:68px; padding:12px;}
+    .recipe-box{padding:26px;}
+    .recipe-view-box{padding:26px;}
+    .culture-hero{border-radius:22px;}
+    .quiz-q{font-size:20px;}
+    .qopt{padding:14px 26px; font-size:16px;}
+    .result-head .big{font-size:48px;}
+    .bars-box{padding:26px 28px;}
+    .bar-row .bname{width:100px; font-size:16px;}
+    #screen-home{padding:42px 38px 80px;margin:0 -22px;min-height:650px;}
+    #screen-home .topbar{margin-bottom:82px;}
+    #screen-home h1{font-size:48px;max-width:650px;}
+    #screen-home .pill{font-size:18px;}
+    #screen-home .designer-illustration{right:12px;top:155px;transform:scale(.82);transform-origin:top right;}
+  }
+
+  @media (max-width:640px){
+    .app{padding:0 16px;}
+    .screen{padding:20px 0 56px;}
+    .topbar{margin-bottom:28px; gap:10px;}
+    .brand{font-size:17px;}
+    .brand.small{font-size:15px;}
+    .topnav{gap:12px; font-size:14px;}
+    .lang-label{font-size:14px;}
+    .lang-pill{font-size:13px;padding:3px 10px;}
+    .back-link{font-size:14px;}
+    .meta-right{font-size:13px;}
+    .timer{font-size:13px;}
+    .progress-circle{width:46px;height:46px;font-size:13px;}
+
+    h1{font-size:26px; margin-bottom:14px;}
+    h2{font-size:21px;}
+    .lede{font-size:15px; margin-bottom:22px;}
+
+    .pill{padding:10px 20px; font-size:16px;}
+
+    .steps-wrap{flex-direction:column; gap:8px; margin:26px 0 30px;}
+    .step-arrow{transform:rotate(90deg); align-self:flex-start; margin-left:14px; font-size:16px;}
+    .step-card{min-height:auto; padding:16px 14px;}
+    .step-card .label{font-size:16px;}
+
+    .culture-grid{grid-template-columns:1fr 1fr; gap:10px;}
+    .culture-card{min-height:150px; padding:14px 12px 0;}
+    .culture-card .cname{font-size:15px;}
+    .culture-card .csub{font-size:12px;}
+    .culture-thumb{height:72px; margin-top:10px;}
+    .culture-thumb svg{width:54px;height:54px;}
+
+    .task-hero-card{padding:22px; margin:24px 0 22px; border-radius:22px;}
+    .task-hero-card .idx{top:18px; right:20px; font-size:13px;}
+    .task-hero-card .tname{font-size:24px; margin-bottom:10px;}
+    .task-hero-card .start{font-size:14px;}
+
+    .box{padding:18px 16px; margin:22px 0 26px; border-radius:22px;}
+    .box p{font-size:14px;}
+    .instr-list li{font-size:14px; gap:10px; padding:4px 0;}
+    .instr-list li .n{font-size:13px; min-width:20px;}
+
+    .word-grid{grid-template-columns:1fr 1fr; gap:10px;}
+    .word-card{min-height:150px; padding:10px 8px 10px; border-radius:16px;}
+    .word-card .front{font-size:14px;}
+    .word-card .icon{width:44px;height:44px;margin:2px 0;}
+    .word-card .sub{font-size:12px;}
+
+    .quiz-q{font-size:17px; margin:22px 0 16px;}
+    .quiz-options{gap:8px;}
+    .qopt{padding:11px 22px; font-size:15px;}
+    .feedback{font-size:14px; margin-top:16px;}
+
+    .orn-box{padding:18px 16px; border-radius:22px;}
+    .orn-row{padding:16px 12px; gap:10px; margin-bottom:18px;}
+    .orn-shape, .orn-blank{width:38px; height:38px;}
+    .orn-choices{gap:10px;}
+    .orn-choice{width:58px; height:58px; padding:9px; border-radius:14px;}
+
+    .recipe-box{padding:18px 16px; border-radius:22px;}
+    .recipe-view-box{padding:18px 16px; border-radius:22px; margin:22px 0 26px;}
+    .food-badge{width:48px; height:48px;}
+    .recipe-steps{gap:8px; margin-top:14px;}
+    .recipe-step{padding:12px 14px; font-size:14px; gap:10px;}
+    .recipe-step .order-badge{width:22px; height:22px; font-size:12px;}
+
+    .result-head .big{font-size:36px;}
+    .result-sub-row{gap:10px; margin:8px 0 28px;}
+    .result-sub-row .label{font-size:16px;}
+    .pct-badge{padding:8px 18px; font-size:18px;}
+    .bars-box{padding:20px 18px; border-radius:22px; margin-bottom:26px;}
+    .bar-row{gap:12px; padding:10px 0;}
+    .bar-row .bname{width:76px; font-size:14px;}
+    .bar-track{height:18px;}
+    .bar-val{width:42px; font-size:14px;}
+    .learned-line{font-size:15px; margin-bottom:32px;}
+
+    .btn-primary{padding:12px 22px; font-size:14px;}
+    .cta{font-size:15px;}
+
+    #screen-home{padding:28px 22px 70px;margin:0 -16px;min-height:640px;}
+    #screen-home .topbar{margin-bottom:78px;}
+    #screen-home .brand{font-size:18px;}
+    #screen-home .topnav{font-size:15px;gap:12px;}
+    #screen-home .lang-label{font-size:15px;}
+    #screen-home .lang-pill{font-size:14px;padding:3px 10px;}
+    #screen-home h1{font-size:36px;max-width:100%;margin-bottom:26px;}
+    #screen-home .pill{font-size:15px;padding:9px 18px;}
+    #screen-home .designer-note{font-size:13px;margin-left:0;max-width:300px;}
+    #screen-home .designer-illustration{right:-26px;top:200px;transform:scale(.62);}
+  }
+
+  @media (max-width:380px){
+    .app{padding:0 14px;}
+    h1{font-size:23px;}
+    h2{font-size:19px;}
+    .culture-grid{grid-template-columns:1fr;}
+    .word-grid{grid-template-columns:1fr 1fr;}
+    .word-card{min-height:130px;}
+    .pill{padding:10px 16px; font-size:13px;}
+    .topnav{gap:8px; font-size:13px;}
+    .brand{font-size:16px;}
+  }
+
+  @media (max-height:520px) and (orientation:landscape){
+    .screen{padding:14px 0 30px;}
+    .topbar{margin-bottom:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="app" id="appRoot">
+
+  <!-- SCREEN 1: LANDING -->
+  <section class="screen active" id="screen-home">
+    <div class="topbar">
+      <div class="brand">Мозговой фитнес</div>
+      <div class="topnav">
+        <span class="lang-label">Язык</span>
+        <span class="lang-pill">рус</span>
+        <a onclick="go('screen-how')">О проекте</a>
+      </div>
+    </div>
+
+    <h1>Тренируй мозг<br>Открывай культуру</h1>
+    <div class="pill-row">
+      <button class="pill" onclick="go('screen-select')">Память</button>
+      <button class="pill" onclick="go('screen-select')">Внимание</button>
+      <button class="pill" onclick="go('screen-select')">Логика</button>
+    </div>
+    <p class="designer-note">Логические задачи на основе языков и традиций различных культур России</p>
+    <div class="designer-illustration" aria-hidden="true">
+      <div class="cap"></div><div class="tassel"></div><div class="cloud"></div>
+      <div class="person-body"></div><div class="person-leg"></div><div class="flower"></div>
+    </div>
+  </section>
+
+  <!-- SCREEN 2: HOW IT WORKS -->
+  <section class="screen" id="screen-how">
+    <div class="topbar">
+      <div class="brand">Мозговой фитнес</div>
+      <div class="topnav">
+        <span class="lang-label">Язык</span>
+        <span class="lang-pill">рус</span>
+        <a onclick="go('screen-home')">На главную</a>
+      </div>
+    </div>
+    <h2 style="font-size:38px;">Как это работает?</h2>
+    <p class="lede" style="font-weight:700; color:var(--ink);">Культура становится материалом твоей тренировки</p>
+
+    <div class="steps-wrap">
+      <div class="step-card"><div class="label">Узнай язык</div><div class="num">01</div></div>
+      <div class="step-arrow">→</div>
+      <div class="step-card"><div class="label">Запомни слова</div><div class="num">02</div></div>
+      <div class="step-arrow">→</div>
+      <div class="step-card"><div class="label">Играй</div><div class="num">03</div></div>
+      <div class="step-arrow">→</div>
+      <div class="step-card"><div class="label">Открой культуру</div><div class="num">04</div></div>
+    </div>
+
+    <div class="row-between">
+      <div class="caps-note">Память | Внимание | Логика</div>
+      <button class="btn-primary" onclick="go('screen-select')">Попробовать →</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 3: SELECT CULTURE -->
+  <section class="screen" id="screen-select">
+    <div class="topbar">
+      <button class="back-link" onclick="go('screen-home')">← Назад</button>
+      <div class="brand small">Выбери культуру</div>
+    </div>
+    <h1 style="font-size:38px;">С какой культуры<br>начнём?</h1>
+    <p class="lede">Выбери регион и отправляйся в тренировку.</p>
+
+    <div class="culture-grid" id="culture-grid"></div>
+    <button class="btn-primary" onclick="go('screen-select')">Все культуры</button>
+  </section>
+
+  <!-- SCREEN 4: CULTURE INTRO -->
+  <section class="screen" id="screen-intro">
+    <div class="topbar">
+      <button class="back-link" onclick="go('screen-select')">← Культуры</button>
+      <div class="progress-circle">01/05</div>
+    </div>
+    <h1 id="intro-title"></h1>
+    <p class="lede" id="intro-lede"></p>
+
+    <div class="culture-hero" id="intro-hero"></div>
+
+    <div class="task-hero-card">
+      <div class="idx">01</div>
+      <div class="tname" id="intro-native"></div>
+      <button class="btn-primary start" style="margin-top:8px;" onclick="startExercise()">Начать</button>
+    </div>
+
+    <div class="row-between" style="margin-top:22px;">
+      <div class="caps-note">09:59</div>
+      <div class="caps-note">Память | Внимание | Логика</div>
+    </div>
+  </section>
+
+  <!-- SCREEN 5: EXERCISE FLOW -->
+  <section class="screen" id="screen-exercise">
+    <div class="topbar">
+      <button class="back-link" id="ex-back">← Назад</button>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div class="timer" id="ex-timer"></div>
+        <div class="progress-circle" id="ex-progress">01/05</div>
+      </div>
+    </div>
+
+    <!-- 5.1 intro -->
+    <div id="step-explain">
+      <h2 id="explain-title">Не знаешь язык?<br>Это нормально.</h2>
+      <p class="lede" id="explain-lede">Мы познакомим тебя с нужными словами прямо во время тренировки.</p>
+      <div class="box">
+        <ul class="instr-list">
+          <li><span class="n">01</span> Познакомься со словами.</li>
+          <li><span class="n">02</span> Запомни их.</li>
+          <li><span class="n">03</span> Реши задание.</li>
+          <li><span class="n">04</span> Посмотри объяснение и ответ.</li>
+        </ul>
+      </div>
+      <div class="row-between" style="justify-content:flex-end;">
+        <button class="btn-primary" onclick="showStep('step-memorize')">Всё понятно →</button>
+      </div>
+    </div>
+
+    <!-- 5.2 memorize words -->
+    <div id="step-memorize" class="hidden">
+      <h2>Запомни слова</h2>
+      <p class="lede" style="font-weight:700; color:var(--ink);">а также их перевод</p>
+      <div class="word-grid" id="word-grid"></div>
+      <div class="row-between">
+        <button class="btn-primary" onclick="startQuiz()">Запомнил</button>
+        <div class="timer" style="font-weight:800; color:var(--region-accent);">⏳ 09:59</div>
+      </div>
+    </div>
+
+    <!-- 5.3 quiz -->
+    <div id="step-quiz" class="hidden">
+      <h2 style="font-size:38px;">Давай проверим</h2>
+      <div class="quiz-q" id="quiz-question"></div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="feedback" id="quiz-feedback"></div>
+      <div class="row-between">
+        <span class="hint-link" id="quiz-hint-link">Подсказка</span>
+        <button class="btn-primary hidden" id="quiz-next">Далее →</button>
+      </div>
+    </div>
+
+    <!-- 5.4 ornament -->
+    <div id="step-ornament" class="hidden">
+      <h2>Игра</h2>
+      <p class="lede" style="font-weight:700; color:var(--ink); font-size:20px;">Восстанови последовательность</p>
+      <div class="orn-box">
+        <p style="margin-bottom:18px;" id="orn-intro"></p>
+        <div class="orn-row" id="orn-row"></div>
+        <div class="orn-choices" id="orn-choices"></div>
+      </div>
+      <div class="row-between">
+        <span class="hint-link" id="orn-hint-link">Подсказка</span>
+        <button class="btn-primary hidden" id="orn-next">Далее →</button>
+      </div>
+    </div>
+
+    <!-- 5.5 recipe view -->
+    <div id="step-recipe-view" class="hidden">
+      <div class="recipe-food-row">
+        <img class="food-badge" id="recipe-view-food" src="" alt="">
+        <h2 style="font-weight:800; letter-spacing:0; text-transform:uppercase; margin:0;" id="recipe-view-title"></h2>
+      </div>
+      <p class="lede" style="font-weight:700; color:var(--ink); font-size:20px; margin-top:2px;">Рецепт по памяти</p>
+      <div class="recipe-view-box">
+        <p style="margin-bottom:6px;" id="recipe-view-intro"></p>
+        <div class="recipe-steps" id="recipe-view-list"></div>
+      </div>
+      <div class="row-between" style="justify-content:flex-end;">
+        <button class="btn-primary" id="recipe-view-next">Запомнил →</button>
+      </div>
+    </div>
+
+    <!-- 5.6 recipe game -->
+    <div id="step-recipe-game" class="hidden">
+      <div class="recipe-food-row">
+        <img class="food-badge" id="recipe-game-food" src="" alt="">
+        <h2 style="font-weight:800; letter-spacing:0; text-transform:uppercase; margin:0;" id="recipe-title"></h2>
+      </div>
+      <p class="lede" style="font-weight:700; color:var(--ink); font-size:20px; margin-top:2px;">Восстанови порядок</p>
+      <div class="recipe-box">
+        <p style="margin-bottom:6px;" id="recipe-intro"></p>
+        <div class="recipe-steps" id="recipe-steps"></div>
+      </div>
+      <div class="row-between" style="justify-content:flex-end;">
+        <button class="btn-primary hidden" id="recipe-next">Готово →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 6: RESULTS -->
+  <section class="screen" id="screen-results">
+    <div class="topbar">
+      <button class="back-link" onclick="go('screen-select')">← На главную</button>
+      <div class="progress-circle">05/05</div>
+    </div>
+
+    <div class="result-head">
+      <p class="big" id="res-greeting">—</p>
+    </div>
+    <div class="result-sub-row">
+      <div class="label" id="res-label">Отличная работа</div>
+      <div class="pct-badge" id="res-pct">0%</div>
+    </div>
+
+    <div class="bars-box">
+      <div class="bar-row">
+        <div class="bname">Память</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-memory"></div></div>
+        <div class="bar-val" id="val-memory">0%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bname">Внимание</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-attention"></div></div>
+        <div class="bar-val" id="val-attention">0%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bname">Логика</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-logic"></div></div>
+        <div class="bar-val" id="val-logic">0%</div>
+      </div>
+    </div>
+
+    <p class="learned-line" id="learned-line"></p>
+
+    <div class="result-footer">
+      <button class="btn-primary" onclick="go('screen-select')">Следующая культура</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* =====================================================================
+   SVG: иконки слов (по значению), персонажи культур
+   ===================================================================== */
+const WORD_ICONS = {
+  'звезда': `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M32 4l5.6 17.4 18.2.3-14.5 11 5.3 17.6L32 40.4 17.4 50.3l5.3-17.6-14.5-11 18.2-.3z"/></svg>`,
+  'луна':   `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M44 8a24 24 0 1 0 0 48c-10 0-18-8-18-18S34 20 44 8z"/></svg>`,
+  'солнце': `<svg viewBox="0 0 64 64" fill="currentColor"><circle cx="32" cy="32" r="12"/><g stroke="currentColor" stroke-width="4" stroke-linecap="round"><line x1="32" y1="4" x2="32" y2="12"/><line x1="32" y1="52" x2="32" y2="60"/><line x1="4" y1="32" x2="12" y2="32"/><line x1="52" y1="32" x2="60" y2="32"/><line x1="12" y1="12" x2="18" y2="18"/><line x1="46" y1="46" x2="52" y2="52"/><line x1="52" y1="12" x2="46" y2="18"/><line x1="18" y1="46" x2="12" y2="52"/></g></svg>`,
+  'вода':   `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M4 22c6-8 12-8 18 0s12 8 18 0 12-8 18 0"/><path d="M4 42c6-8 12-8 18 0s12 8 18 0 12-8 18 0"/></svg>`,
+  'земля':  `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M4 52h56L44 24 32 40 22 28z"/></svg>`
+};
+function wordIcon(meaning){
+  return WORD_ICONS[meaning] || `<svg viewBox="0 0 64 64" fill="currentColor"><circle cx="32" cy="32" r="16"/></svg>`;
+}
+
+/* Абстрактные персонажи-обложки для каждой культуры (в стиле макетов) */
+const CULTURE_CHARACTERS = {
+  tatar: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="96" rx="52" ry="6" fill="none" stroke="#b8863b" stroke-width="1.5" opacity=".5"/>
+    <rect x="24" y="38" width="72" height="34" rx="6" fill="#d97a2b"/>
+    <rect x="24" y="38" width="72" height="12" rx="6" fill="#3a2a1c"/>
+    <ellipse cx="40" cy="46" rx="5" ry="7" fill="#f2e6c9"/>
+    <ellipse cx="60" cy="46" rx="5" ry="7" fill="#f2e6c9"/>
+    <ellipse cx="80" cy="46" rx="5" ry="7" fill="#f2e6c9"/>
+    <path d="M34 42 q6 4 12 0" stroke="#3a2a1c" stroke-width="2" fill="none"/>
+    <path d="M54 42 q6 4 12 0" stroke="#3a2a1c" stroke-width="2" fill="none"/>
+    <path d="M74 42 q6 4 12 0" stroke="#3a2a1c" stroke-width="2" fill="none"/>
+    <path d="M46 72 q14 6 28 0" stroke="#3a2a1c" stroke-width="3" fill="none"/>
+    <rect x="40" y="72" width="4" height="22" fill="#1a1a1a"/>
+    <rect x="76" y="72" width="4" height="22" fill="#1a1a1a"/>
+  </svg>`,
+  karelia: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="96" rx="52" ry="6" fill="none" stroke="#c2497f" stroke-width="1.5" opacity=".5"/>
+    <path d="M60 24 L92 78 L28 78 Z" fill="#d63d88"/>
+    <circle cx="48" cy="60" r="6" fill="#1a1a1a"/>
+    <circle cx="72" cy="60" r="6" fill="#1a1a1a"/>
+    <path d="M50 20 q-4 -14 8 -18 q4 6 2 14" fill="#1a1a1a"/>
+    <path d="M62 20 q8 -12 18 -10 q-2 8 -10 14" fill="#1a1a1a"/>
+    <rect x="46" y="78" width="4" height="20" fill="#1a1a1a"/>
+    <rect x="70" y="78" width="4" height="20" fill="#1a1a1a"/>
+  </svg>`,
+  kalmykia: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="96" rx="52" ry="6" fill="none" stroke="#d2432b" stroke-width="1.5" opacity=".5"/>
+    <path d="M60 22 q-30 22 -30 44 q0 12 30 12 q30 0 30 -12 q0 -22 -30 -44z" fill="#e05a2f"/>
+    <path d="M30 40 q-22 4 -26 22 q16 6 26 -6z" fill="#d1331a"/>
+    <path d="M90 40 q22 4 26 22 q-16 6 -26 -6z" fill="#d1331a"/>
+    <circle cx="48" cy="58" r="5" fill="#1a1a1a"/>
+    <circle cx="72" cy="58" r="5" fill="#1a1a1a"/>
+    <path d="M46 78 q4 8 0 22" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M74 78 q-4 8 0 22" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  yakutia: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="96" rx="52" ry="6" fill="none" stroke="#3f6f93" stroke-width="1.5" opacity=".5"/>
+    <ellipse cx="60" cy="58" rx="26" ry="38" fill="#33587a"/>
+    <circle cx="60" cy="58" r="13" fill="#f2f0e6"/>
+    <circle cx="60" cy="58" r="5" fill="#1a1a1a"/>
+    <path d="M40 24 q-14 -10 -22 -6 q4 8 14 12" fill="#1a1a1a"/>
+    <path d="M40 24 q-14 4 -22 4 q4 -6 14 -10" fill="#1a1a1a"/>
+    <path d="M80 24 q14 -10 22 -6 q-4 8 -14 12" fill="#1a1a1a"/>
+    <path d="M80 24 q14 4 22 4 q-4 -6 -14 -10" fill="#1a1a1a"/>
+    <path d="M52 94 q4 10 0 18" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M68 94 q-4 10 0 18" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>`
+};
+function cultureCharacter(id){
+  return CULTURE_CHARACTERS[id] || CULTURE_CHARACTERS.tatar;
+}
+
+/* =====================================================================
+   ДАННЫЕ КУЛЬТУР
+   ===================================================================== */
+const CULTURES = {
+  tatar: {
+    id:'tatar',
+    name:'Татарстан',
+    native:'Татарча',
+    langGenitive:'татарских',
+    langAdjForm:'татарским',
+    greeting:'ХӘЕР!',
+    hero:'assets/hero-tatarstan.jpg',
+    food:'assets/food-tatarstan.png',
+    words:[
+      {w:'йолдыз', m:'звезда'},
+      {w:'ай',     m:'луна'},
+      {w:'кояш',   m:'солнце'},
+      {w:'су',     m:'вода'},
+      {w:'җир',    m:'земля'},
+    ],
+    quiz:[
+      { q:'Какое слово означает «солнце»?',
+        options:['йолдыз','ай','кояш'],
+        answer:'кояш',
+        explain:'«Кояш» — солнце. От него образуется «кояшлы» — солнечный.' }
+    ],
+    quizHint:'Подсказка: это слово однокоренное с «кояшлы» — солнечный.',
+    ornament:{
+      intro:'В татарском орнаменте важны повторения и закономерности.<br><b>Найди недостающий элемент.</b>',
+      seq:['triangle','circle','square','triangle','circle','square','triangle'],
+      missing:3,
+      hint:'Посмотри, какая фигура повторяется через одну — треугольник, круг, квадрат.'
+    },
+    recipe:{
+      title:'Эчпочмак',
+      intro:'Ты увидишь этапы приготовления традиционного блюда.<br><b>Нажимай на шаги по порядку.</b>',
+      steps:[
+        'Замесить тесто из муки, воды и соли',
+        'Нарезать мясо, картофель и лук кубиками',
+        'Раскатать тесто и вырезать круги',
+        'Выложить начинку и защипать треугольником'
+      ]
+    }
+  },
+
+  karelia: {
+    id:'karelia',
+    name:'Карелия',
+    native:'Karjalan kieli',
+    langGenitive:'карельских',
+    langAdjForm:'карельским',
+    greeting:'HYVÄ!',
+    hero:'assets/hero-karelia.jpg',
+    food:'assets/food-karelia.png',
+    words:[
+      {w:'tähti', m:'звезда'},
+      {w:'kuu',   m:'луна'},
+      {w:'päivä', m:'солнце'},
+      {w:'vezi',  m:'вода'},
+      {w:'mua',   m:'земля'},
+    ],
+    quiz:[
+      { q:'Какое слово означает «вода»?',
+        options:['kuu','vezi','mua'],
+        answer:'vezi',
+        explain:'«Vezi» — вода, родственно финскому «vesi».' }
+    ],
+    quizHint:'Подсказка: короткое слово, начинается с «v» — как финское «vesi».',
+    ornament:{
+      intro:'Карельская вышивка строится на ритме и повторе узоров.<br><b>Найди недостающий элемент.</b>',
+      seq:['triangle','circle','square','triangle','circle','square','triangle'],
+      missing:5,
+      hint:'Узор идёт тройками: треугольник, круг, квадрат. Какая фигура завершает повтор?'
+    },
+    recipe:{
+      title:'Калитки',
+      intro:'Ты увидишь этапы приготовления традиционного блюда.<br><b>Нажимай на шаги по порядку.</b>',
+      steps:[
+        'Замесить ржаное тесто',
+        'Раскатать тонкие лепёшки',
+        'Положить начинку из картофеля или пшёнки',
+        'Защипать края и запечь в печи'
+      ]
+    }
+  },
+
+  kalmykia: {
+    id:'kalmykia',
+    name:'Калмыкия',
+    native:'Хальмг келн',
+    langGenitive:'калмыцких',
+    langAdjForm:'калмыцким',
+    greeting:'СӘН!',
+    hero:'assets/hero-kalmykia.jpg',
+    food:'assets/food-kalmykia.png',
+    words:[
+      {w:'одн',   m:'звезда'},
+      {w:'сар',   m:'луна'},
+      {w:'нарн',  m:'солнце'},
+      {w:'усн',   m:'вода'},
+      {w:'һазр',  m:'земля'},
+    ],
+    quiz:[
+      { q:'Какое слово означает «луна»?',
+        options:['нарн','сар','одн'],
+        answer:'сар',
+        explain:'«Сар» — луна и месяц. Так же у многих монгольских народов.' }
+    ],
+    quizHint:'Подсказка: короткое слово из трёх букв, начинается на «с».',
+    ornament:{
+      intro:'Калмыцкий орнамент «зег» — это степные узоры, где всё повторяется.<br><b>Найди недостающий элемент.</b>',
+      seq:['circle','square','triangle','circle','square','triangle','circle'],
+      missing:4,
+      hint:'Узор идёт тройками: круг, квадрат, треугольник. Что должно стоять вторым элементом?'
+    },
+    recipe:{
+      title:'Калмыцкий чай',
+      intro:'Ты увидишь этапы приготовления традиционного напитка.<br><b>Нажимай на шаги по порядку.</b>',
+      steps:[
+        'Вскипятить воду',
+        'Добавить чайную заварку',
+        'Влить молоко и прокипятить',
+        'Добавить соль и мускатный орех'
+      ]
+    }
+  },
+
+  yakutia: {
+    id:'yakutia',
+    name:'Якутия',
+    native:'Саха тыла',
+    langGenitive:'якутских',
+    langAdjForm:'якутским',
+    greeting:'ҮЧҮГЭЙ!',
+    hero:'assets/hero-yakutia.jpg',
+    food:'assets/food-yakutia.png',
+    words:[
+      {w:'сулус', m:'звезда'},
+      {w:'ый',    m:'луна'},
+      {w:'күн',   m:'солнце'},
+      {w:'уу',    m:'вода'},
+      {w:'сир',   m:'земля'},
+    ],
+    quiz:[
+      { q:'Какое слово означает «солнце»?',
+        options:['сулус','ый','күн'],
+        answer:'күн',
+        explain:'«Күн» — солнце и день. У тюркских народов это одно из главных слов.' }
+    ],
+    quizHint:'Подсказка: короткое слово с мягким «ү», похоже на тюркское «kün».',
+    ornament:{
+      intro:'Якутские узоры подчиняются строгому ритму.<br><b>Найди недостающий элемент.</b>',
+      seq:['square','triangle','circle','square','triangle','circle','square'],
+      missing:2,
+      hint:'Узор повторяется тройками: квадрат, треугольник, круг. Что идёт третьим?'
+    },
+    recipe:{
+      title:'Строганина',
+      intro:'Ты увидишь этапы приготовления традиционного блюда.<br><b>Нажимай на шаги по порядку.</b>',
+      steps:[
+        'Заморозить свежую рыбу',
+        'Снять кожу',
+        'Нарезать тонкими стружками',
+        'Подать с солью и чёрным перцем'
+      ]
+    }
+  }
+};
+
+/* =====================================================================
+   ФИГУРЫ ДЛЯ ОРНАМЕНТА
+   ===================================================================== */
+const SHAPES = {
+  triangle:'<svg viewBox="0 0 52 52" width="100%" height="100%"><polygon points="26,8 46,42 6,42" fill="currentColor"/></svg>',
+  circle:'<svg viewBox="0 0 52 52" width="100%" height="100%"><circle cx="26" cy="26" r="18" fill="currentColor"/></svg>',
+  square:'<svg viewBox="0 0 52 52" width="100%" height="100%"><rect x="9" y="9" width="34" height="34" fill="currentColor"/></svg>'
+};
+function shapeIcon(name){ return `<div style="width:100%; height:100%;">${SHAPES[name]}</div>`; }
+
+/* =====================================================================
+   СОСТОЯНИЕ
+   ===================================================================== */
+let current = null;
+let score = null;
+let timerInterval = null;
+
+function freshScore(){
+  return {
+    memory:{hits:0,total:0},
+    attention:{hits:0,total:0},
+    logic:{hits:0,total:0}
+  };
+}
+
+/* =====================================================================
+   НАВИГАЦИЯ
+   ===================================================================== */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+/* =====================================================================
+   GRID ВЫБОРА КУЛЬТУР
+   ===================================================================== */
+function buildCultureGrid(){
+  const grid = document.getElementById('culture-grid');
+  grid.innerHTML = '';
+  Object.values(CULTURES).forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className = 'culture-card theme-' + c.id;
+    btn.onclick = ()=>openCulture(c.id);
+    btn.innerHTML = `
+      <div>
+        <div class="cname">${c.name} →</div>
+        <div class="csub">5 заданий</div>
+      </div>
+      <div class="culture-thumb">${cultureCharacter(c.id)}</div>
+    `;
+    grid.appendChild(btn);
+  });
+}
+
+/* =====================================================================
+   ИНТРО КУЛЬТУРЫ
+   ===================================================================== */
+function openCulture(id){
+  current = CULTURES[id];
+  document.getElementById('intro-title').innerHTML =
+    `${current.name} <span style="color:var(--region-accent); font-size:0.7em; font-weight:700;">${current.native}</span>`;
+  document.getElementById('intro-lede').innerHTML =
+    `Сегодня ты познакомишься с языком и культурой <b>${current.name}</b> через <b>5 небольших заданий</b>.`;
+  document.getElementById('intro-native').innerText = current.native;
+  document.getElementById('ex-back').innerText = '← ' + current.native;
+
+  const hero = document.getElementById('intro-hero');
+  // Попытка загрузить фото, если нет — рисуем SVG-персонажа
+  hero.innerHTML = '';
+  const img = document.createElement('img');
+  img.alt = current.name;
+  img.src = current.hero;
+  img.onerror = ()=>{ hero.innerHTML = cultureCharacter(current.id); };
+  hero.appendChild(img);
+
+  const app = document.getElementById('appRoot');
+  app.classList.remove('theme-tatar','theme-karelia','theme-kalmykia','theme-yakutia');
+  app.classList.add('theme-' + id);
+
+  go('screen-intro');
+}
+
+/* =====================================================================
+   УПРАВЛЕНИЕ ПОТОКОМ
+   ===================================================================== */
+function startExercise(){
+  score = freshScore();
+  go('screen-exercise');
+  showStep('step-explain');
+}
+
+function showStep(id){
+  document.querySelectorAll('#screen-exercise > div[id^="step-"]').forEach(s=>s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+
+  const progressMap = {
+    'step-explain':'01/05',
+    'step-memorize':'02/05',
+    'step-quiz':'04/05',
+    'step-ornament':'04/05',
+    'step-recipe-view':'04/05',
+    'step-recipe-game':'05/05'
+  };
+  document.getElementById('ex-progress').innerText = progressMap[id] || '01/05';
+
+  clearInterval(timerInterval);
+  const timeMap = {'step-memorize':239,'step-quiz':179,'step-ornament':150,'step-recipe-view':150,'step-recipe-game':150};
+  if(timeMap[id]) startTimer(timeMap[id]);
+  else document.getElementById('ex-timer').innerText = '';
+
+  window.scrollTo({top:0, behavior:'instant'});
+
+  if(id==='step-memorize') buildWordGrid();
+  if(id==='step-ornament') buildOrnamentGame();
+  if(id==='step-recipe-view') buildRecipeView();
+  if(id==='step-recipe-game')   buildRecipeGame();
+}
+
+function startTimer(seconds){
+  let s = seconds;
+  const el = document.getElementById('ex-timer');
+  const render = ()=>{
+    const m = Math.floor(s/60), sec = s%60;
+    el.innerText = '⏳ ' + m + ':' + String(sec).padStart(2,'0');
+  };
+  render();
+  timerInterval = setInterval(()=>{
+    s--;
+    if(s < 0){ clearInterval(timerInterval); return; }
+    render();
+  },1000);
+}
+
+/* ---------- ШАГ: карточки слов ---------- */
+function buildWordGrid(){
+  const grid = document.getElementById('word-grid');
+  grid.innerHTML = '';
+  current.words.forEach(item=>{
+    const card = document.createElement('div');
+    card.className = 'word-card';
+    card.innerHTML = `
+      <div class="front">${item.w}</div>
+      <div class="icon">${wordIcon(item.m)}</div>
+      <div class="sub">?</div>
+    `;
+    card.onclick = ()=>{
+      if(card.classList.contains('revealed')) return;
+      card.classList.add('revealed');
+      card.querySelector('.sub').innerText = item.m;
+      score.memory.hits++;
+      score.memory.total = current.words.length;
+    };
+    grid.appendChild(card);
+  });
+}
+
+/* ---------- ШАГ: викторина ---------- */
+let quizIdx = 0;
+
+function startQuiz(){
+  quizIdx = 0;
+  showStep('step-quiz');
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  const q = current.quiz[quizIdx];
+  const qEl = document.getElementById('quiz-question');
+  const optsEl = document.getElementById('quiz-options');
+  const fb = document.getElementById('quiz-feedback');
+  const next = document.getElementById('quiz-next');
+
+  fb.innerText = ''; fb.className = 'feedback';
+  next.classList.add('hidden');
+
+  qEl.innerText = q.q;
+  optsEl.innerHTML = '';
+
+  const opts = [...q.options].sort(()=>Math.random()-0.5);
+  opts.forEach(opt=>{
+    const btn = document.createElement('button');
+    btn.className = 'qopt';
+    btn.innerText = opt;
+    btn.onclick = ()=>{
+      document.querySelectorAll('.qopt').forEach(b=>b.disabled = true);
+      score.attention.total++;
+      if(opt === q.answer){
+        btn.classList.add('correct');
+        fb.innerText = 'Верно! ' + (q.explain || '');
+        fb.className = 'feedback good';
+        score.attention.hits++;
+      } else {
+        btn.classList.add('wrong');
+        fb.innerText = `Неверно. Правильный ответ — «${q.answer}». ` + (q.explain || '');
+        fb.className = 'feedback bad';
+      }
+      next.classList.remove('hidden');
+    };
+    optsEl.appendChild(btn);
+  });
+
+  document.getElementById('quiz-hint-link').onclick = ()=>{ alert(current.quizHint); };
+  next.onclick = ()=>{ showStep('step-ornament'); };
+}
+
+/* ---------- ШАГ: орнамент ---------- */
+function buildOrnamentGame(){
+  const p = current.ornament;
+  const row = document.getElementById('orn-row');
+  const choices = document.getElementById('orn-choices');
+  const nextBtn = document.getElementById('orn-next');
+
+  document.getElementById('orn-intro').innerHTML = p.intro;
+  nextBtn.classList.add('hidden');
+  row.innerHTML = '';
+  choices.innerHTML = '';
+
+  p.seq.forEach((shape, i)=>{
+    if(i === p.missing){
+      const blank = document.createElement('div');
+      blank.className = 'orn-blank';
+      blank.innerText = '?';
+      row.appendChild(blank);
+    } else {
+      const s = document.createElement('div');
+      s.className = 'orn-shape';
+      s.innerHTML = shapeIcon(shape);
+      row.appendChild(s);
+    }
+  });
+
+  score.logic.total++;
+
+  const options = [...new Set(p.seq)].sort(()=>Math.random()-0.5);
+  options.forEach(opt=>{
+    const c = document.createElement('div');
+    c.className = 'orn-choice';
+    c.innerHTML = shapeIcon(opt);
+    c.onclick = ()=>{
+      choices.querySelectorAll('.orn-choice').forEach(ch=>ch.style.pointerEvents = 'none');
+      if(opt === p.seq[p.missing]){
+        c.classList.add('correct');
+        score.logic.hits++;
+      } else {
+        c.classList.add('wrong');
+      }
+      nextBtn.classList.remove('hidden');
+    };
+    choices.appendChild(c);
+  });
+
+  document.getElementById('orn-hint-link').onclick = ()=>{ alert(p.hint); };
+  nextBtn.onclick = ()=>{ showStep('step-recipe-view'); };
+}
+
+/* ---------- ШАГ: рецепт — просмотр ---------- */
+const GAME_RECIPE_INTRO = 'Теперь расставь шаги по порядку — так, как ты их запомнил.<br><b>Нажимай на шаги по очереди.</b>';
+
+function buildRecipeView(){
+  const r = current.recipe;
+  document.getElementById('recipe-view-title').innerText = r.title;
+  document.getElementById('recipe-view-intro').innerHTML = r.intro;
+  const img = document.getElementById('recipe-view-food');
+  img.src = current.food;
+  img.alt = r.title;
+  img.onerror = ()=>{ img.style.display = 'none'; };
+
+  const list = document.getElementById('recipe-view-list');
+  list.innerHTML = '';
+  r.steps.forEach((t,i)=>{
+    const row = document.createElement('div');
+    row.className = 'recipe-step static';
+    row.innerHTML = `<span class="order-badge">${i+1}</span><span>${t}</span>`;
+    list.appendChild(row);
+  });
+
+  document.getElementById('recipe-view-next').onclick = ()=>{ showStep('step-recipe-game'); };
+}
+
+/* ---------- ШАГ: рецепт — игра ---------- */
+function buildRecipeGame(){
+  const container = document.getElementById('recipe-steps');
+  const nextBtn = document.getElementById('recipe-next');
+
+  document.getElementById('recipe-title').innerText = current.recipe.title;
+  document.getElementById('recipe-intro').innerHTML = GAME_RECIPE_INTRO;
+  const img = document.getElementById('recipe-game-food');
+  img.src = current.food;
+  img.alt = current.recipe.title;
+  img.onerror = ()=>{ img.style.display = 'none'; };
+  nextBtn.classList.add('hidden');
+  container.innerHTML = '';
+
+  const steps = current.recipe.steps;
+  const shuffled = steps.map((t,i)=>({t,i})).sort(()=>Math.random()-0.5);
+  let nextExpected = 0;
+  let placedCount = 0;
+
+  score.memory.total++;
+
+  shuffled.forEach(item=>{
+    const row = document.createElement('div');
+    row.className = 'recipe-step';
+    row.innerHTML = `<span class="order-badge">•</span><span>${item.t}</span>`;
+    row.onclick = ()=>{
+      if(row.classList.contains('placed')) return;
+      if(item.i === nextExpected){
+        row.classList.add('placed');
+        row.querySelector('.order-badge').innerText = nextExpected + 1;
+        nextExpected++;
+        placedCount++;
+        if(placedCount === steps.length){
+          score.memory.hits++;
+          nextBtn.classList.remove('hidden');
+        }
+      } else {
+        row.style.borderColor = 'var(--bad)';
+        setTimeout(()=>{ row.style.borderColor = ''; }, 420);
+      }
+    };
+    container.appendChild(row);
+  });
+
+  nextBtn.onclick = showResults;
+}
+
+/* =====================================================================
+   РЕЗУЛЬТАТЫ
+   ===================================================================== */
+function showResults(){
+  clearInterval(timerInterval);
+  go('screen-results');
+
+  const pct = (o)=> o.total ? Math.round((o.hits / o.total) * 100) : 0;
+  const smooth = (v)=> Math.max(35, Math.min(98, v || 70));
+
+  const mem = smooth(pct(score.memory));
+  const att = smooth(pct(score.attention));
+  const log = smooth(pct(score.logic));
+  const overall = Math.round((mem + att + log) / 3);
+
+  document.getElementById('res-greeting').innerText = current.greeting;
+  document.getElementById('res-pct').innerText = overall + '%';
+  document.getElementById('res-label').innerText =
+    overall >= 85 ? 'Отличная работа' :
+    overall >= 65 ? 'Хороший результат' :
+    overall >= 40 ? 'Неплохо для начала' : 'Есть куда расти';
+
+  document.getElementById('learned-line').innerHTML =
+    `Ты узнал: <b>${current.words.length}</b> ${current.langGenitive} слов · ` +
+    `<b>1</b> традицию · <b>1</b> рецепт`;
+
+  animateBar('bar-memory','val-memory',mem);
+  animateBar('bar-attention','val-attention',att);
+  animateBar('bar-logic','val-logic',log);
+}
+
+function animateBar(barId, valId, pct){
+  const bar = document.getElementById(barId);
+  const val = document.getElementById(valId);
+  bar.style.width = '0%';
+  val.innerText = pct + '%';
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ bar.style.width = pct + '%'; }); });
+}
+
+/* =====================================================================
+   ИНИЦИАЛИЗАЦИЯ
+   ===================================================================== */
+buildCultureGrid();
+document.getElementById('ex-back').onclick = ()=>go('screen-intro');
+</script>
+</body>
+  </html>
